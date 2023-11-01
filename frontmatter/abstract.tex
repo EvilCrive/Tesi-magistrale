@@ -1,0 +1,14 @@
+%!TEX root = ../main.tex
+\begin{abstract}
+In this thesis we describe the work that I, Alberto Crivellari, along with the professors Damiano Piovesan and Alexander Monzon, carried out during my internship period. The work we have done can be summarized in analysing the existent software tool, developing a procedure to detect secondary structure in proteins, a procedure to compute relative solvent-accessibility (rsa) of aminoacids, and another procedure that allows to use a different file (*.fcz) as input file for the tool. Then we integrated all these procedures into the existent software tool. Then we analysed the results to evaluate their quality, by means of different plots and ML models.
+
+More in detail, we studied and analysed the pre-existent software tool, AlphaFold-disorder, a Python application which make predictions on protein structure using as input protein data files. As the name says, the main prediction regards disorder, but there is also a column of the table, which is the output, that contains statistics on binding between aminoacids. Actually under this software tools there are three predicting algorithms: AlphaFold-pLDDT, AlphaFold-rsa and AlphaFold-binding. The first two are algorithms that predict disorder, using respectively the statistics of pLDDT and the rsa, while the last one predicts binding.
+
+For the first procedure, we developed an algorithm which detects the secondary structure of proteins by using distances and angles between aminoacids, calculated with protein atomic coordinates. The idea behind this method is explained in a scientific paper\cite{psea}.
+
+For the second procedure, we implemented a library to calculate aminoacids' solvent-accessibility using Shrake \& Rupley algorithm. Then we obtained the relative measure by applying normalization factors.
+
+For the last procedure, we implemented a library that allows to create, read, compress and decompress *.fcz files, which are compressed files for protein data. With this procedure we can use the compressed *.fcz files as input instead, allowing us to store large proteins' datasets with less space required.
+
+Finally, we integrated these 3 procedures into the existing software tool and evaluated the results with various plots and ML models.
+\end{abstract}
