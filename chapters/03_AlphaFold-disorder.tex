@@ -2,18 +2,18 @@
 \label{chp:alphafold-disorder}
 
 \section{Introduction}
-AlphaFold-disorder is a software tool developed by my co-supervisor Damiano Piovesan, my co-supervisor Alexander Miguel Monzon, and other members of the BioComputing UP laboratory. The objective of the software tool is predicting disorder and binding of the aminoacids with high accuracy. 
+AlphaFold-disorder is a software tool developed by my co-supervisor Damiano Piovesan, my co-supervisor Alexander Miguel Monzon and other members of the BioComputing UP laboratory. The objective of the software tool is predicting disorder and binding of the aminoacids with high accuracy. 
 
-A web application, also developed by members of the BioComputing UP laboratory, CAID (Critical Assessment of Protein Intrinsic Disorder) was used to measure the quality of the software tool prediction.
+The web application CAID (Critical Assessment of Protein Intrinsic Disorder), also developed by members of the BioComputing UP laboratory, was used to measure the quality of the software tool prediction.
 
-In particular within the tool 3 algorithms were measured: 
+In particular 3 algorithms within the tool were measured: 
 \begin{itemize}
     \item \textbf{AlphaFold-pLDDT}: uses pLDDT to predict disorder values;
     \item \textbf{AlphaFold-rsa}: uses pLDDT and RSA statistics to predict disorder values;
     \item \textbf{AlphaFold-binding}: uses pLDDT and RSA statistics to predict binding values.
 \end{itemize}
 
-Each of these algorithms produce a table containing binding, disorder and other statistics for every aminoacid, or residue\footnote{In molecular biology, a residue refers to a monomer within a polymeric chain. In the case of a protein, a residue refers to an aminoacid.}. 
+Each of these algorithms produces a table containing binding, disorder and other statistics for every aminoacid, or residue\footnote{In molecular biology, a residue refers to a monomer within a polymeric chain. In the case of a protein, a residue refers to an aminoacid.}. 
 
 The professors and researchers of the laboratory published a scientific paper\cite{alphafold-disorder} regarding this software tool: Intrinsic protein disorder and conditional folding in AlphaFoldDB. 
 
@@ -30,7 +30,7 @@ Here we can see a picture representing the CAID cycle: Ground Truth, Standardiza
 \begin{itemize}
     \item \textbf{Ground Truth}: DisProt database was selected as reference because it contains a large number of manually curated disorder and binding annotations at a protein level. DisProt annotates association between intrinsically disordered regions and a biological function.
     \item \textbf{Standardization}: Participants submit their softwares, and the CAID organizers encapsulate code into containers, providing standardization across different machines. This also makes it easier to deploy them and to package softwares with dependencies.
-    \item \textbf{Prediction}: Running the containers implented in the Standardization step on the Ground Truth targets generate predictions. The cluster used by CAID can execute all methods in parallel within some resource contraints (90 GB RAM, 48 threads, 4 Hours per sequence).
+    \item \textbf{Prediction}: Running the containers implemented in the Standardization step on the Ground Truth targets generates predictions. The cluster used by CAID can execute all methods in parallel within some resource contraints (90 GB RAM, 48 threads, 4 Hours per sequence).
     \item \textbf{Benchmarking}: The performances of the various methods are evaluated by a number of metrics. CAID identifies the confidence threshold to optimize the performance for a specific metric. In benchmarking and runtimes pages are reported some of the assessment results.
 \end{itemize}
 
@@ -39,26 +39,26 @@ The 3 algorithms we mentioned earlier: AlphaFold-pLDDT, AlphaFold-rsa and AlphaF
 \section{AlphaFold-pLDDT}
 This predictor is provided by the software tool AlphaFold-disorder. It's a predictor for disorder, which means that it predicts for each residue its propensity to be intrinsically disordered.
 
-Its predictions are based on the pLDDT, predicted Local Distance Difference Test, which is already present in .pdb files from AlphaFold predictions as the b-factor. So this algorithm just obtains the b-factor and obtains a statistic representing disorder propensity for that residue.
+Its predictions are based on the pLDDT, predicted Local Distance Difference Test, which is already present in .pdb files from AlphaFold predictions as the b-factor. So this algorithm just obtains a statistic representing disorder propensity for that residue, out of the b-factor.
 
 AlphaFold-pLDDT uses "1 - pLDDT" as disorder propensity. 
 
 The optimal classification threshold found with CAID is 0.312, representing pLDDT <68.8 \%, this threshold was selected by maximizing the F1-Score performance on the CAID DisProt dataset.
 \section{AlphaFold-rsa}
-This predictor is provided by the software tool AlphaFold-disorder. It's a predictor for disorder too.
+This predictor is provided by the software tool AlphaFold-disorder. This tool, as the last one we talked about, is also a predictor for disorder.
 
 On this predictor, the disorder propensity is calculated with the relative solvent accessibility, RSA, over a local window centered on the residue whose disorder propensity we want to predict. DSSP was used to obtain the relative solvent accessibility and the optimal local window, of 25 residues, was chosen with a grid search in the range of 1 to 50 residues.
 
 The optimal classification threshold for AlphaFold-rsa is of 0.581, which means rsa < 41.9 \%. Again the threshold was selected by maximizing F1-Score performance on the CAID DisProt dataset.
 
 \section{AlphaFold-binding}
-Finally we have the last predictor in the software tool AlphaFold-disorder. This is a binding predictor, which means that it predicts a statistic that represent the propensity of a residue to bind.
+Finally we have the last predictor in the software tool AlphaFold-disorder. This is a binding predictor, which means that it predicts a statistic that represents the propensity of a residue to bind.
 
-This predictor make use of both the pLDDT and the RSA calculated for the other 2 predictors: in the scientific paper \cite{alphafold-disorder} that describes the software tool AlphaFold-disorder, we can see the relation between RSA, pLDDT and this binding propensity.
+This predictor makes use of both the pLDDT and the RSA calculated for the other 2 predictors: in the scientific paper \cite{alphafold-disorder} that describes the software tool AlphaFold-disorder, we can see the relation between RSA, pLDDT and this binding propensity.
 
 \includegraphics[scale=.7]{res/alphafold-binding.png}
 
-That T represents a threshold, obtained again from maximizing the F1-Score on the CAID DisProt dataset, obtaining a value of 0.773. 
+That T represents a threshold, obtained again from maximizing the F1-Score on the CAID DisProt dataset. The optimal threshold found with CAID is 0.773. 
 
 Below 0.773 the binding propensity is the value from AlphaFold-rsa(T); above 0.773 we use the pLDDT score to compute the binding propensity.
 
