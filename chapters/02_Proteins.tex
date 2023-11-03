@@ -109,6 +109,7 @@ The DNA can replicate itself or can be used to produce proteins, which are parti
 We will now see more in detail this process from DNA to proteins, called protein synthesis.
 
 \subsection{Central Dogma of Biology}
+\label{sec:central-dogma}
 \begin{figure}[h!]
 	\includegraphics[scale=.27]{res/proteins_overview/central_dogma.png}
 	\centering
@@ -357,7 +358,125 @@ IDPs (Intrinsically Disorder Proteins) are really interesting to study, because 
  They are also implicated in several pathological conditions, like cancer, cardiovascular diseases, and neurodegenerative diseases. 
 
 Some of the first classes of IDPs were notable due to their pathological roles in neurodegenerative diseases.
+
+\vspace{20em}
+
+\pagebreak
+
 \section{Computational Biology: Computer Science Applied to Biology}
-\subsection{Bioinformatics}
-\subsection{Structural data}
+The growing amount of data in the field of Molecular Biology brought the scientists to exploit Computer Science. Computers can process data way faster than human beings, and especially in this field, where we have so much information on DNA, genes and proteins, it's really useful to compute and process these informations faster and possibly with less errors.
+
+This new field takes the name of Bioinformatics, the union of Biology, Computer Science and Statistics. Statistics is needed because most of the information aren't 100\% reliable, hence statistics methods are used.
+The main fields of bioinformatics are:
+\begin{itemize}
+    \item \textbf{Structural data analysis}: the purpose is to predict the three-dimensional structures of proteins, nucleic acids and other biological molecules. Understanding the structure of these molecules can provide insights into their functions and interactions;
+    \item \textbf{Omics data analysis}: for example genomics, proteomics, metagenomics, epigenomics and so on. Omics data is a broad term that refers to large-scale datasets generated from various biological technologies. These large-scale datasets enable researchers to study different aspects of biological systems, often on a global or comprehensive scale. For example, in genomics analysis, we have large-scale datasets focused on genome data, so we can analyse DNA sequences and genes organization and functions.
+\end{itemize}
+
+On this thesis the focus will be on structural data analysis, since the software tool I talk about analyzes the three-dimensional structure to obtain information on the disorder or binding propensity.
+
+\vspace{5em}
+
+\subsection{Structural Data}
+Let's start off with the basic macromolecular structure data, down below we can see a figure that represents structure in the various macromolecules.
+\pagebreak
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics{res/proteins_overview/atom_bird.png}
+    \caption{Atom to macromolecules to organism}
+    \label{fig:atom-bird}
+\end{figure}
+
+From the figure \ref{fig:atom-bird} we can see the various steps from molecules to macromolecules to bigger complexes up to the final organim.
+
+The passage between molecules to macromolecules, can be observed more in detail in the following figure.
+\begin{figure}[h!]
+    \centering
+    \includegraphics{res/proteins_overview/dna_protein.png}
+    \caption{Atom to macromolecules to organism}
+    \label{fig:molecule-protein}
+\end{figure}
+
+From the figure \ref{fig:molecule-protein} we can see that passage, from DNA to RNA to peptide chains to the protein. We can see the various structure. We already explained earlier the phases of transcription, translation and folding in the chapter \ref{sec:central-dogma}. 
+
+We can use structural data for:
+\begin{itemize}
+    \item Structure prediction;
+    \item Predict protein interactions: protein folding, binding, protein assemblies;
+    \item Structure comparison: by comparing structure we can also make evolutionary classification;
+    \item Explore mechanisms of interaction with ligands: metabolites, drug compounds, DNA and others.
+\end{itemize}
+
+From molecular data we obtain information on coordinates and then we want to obtain some kind of knowledge, for example:
+\begin{itemize}
+    \item Mutation X disrupts function of enzyme Y which causes disease Z.
+\end{itemize}
+
+\vspace{1em}
+
+\noindent "Coordinates by themselves just specify shape and are not necessarily of intrinsic biological value, unless they can be related to other information"
+
+\noindent \small{\textit{Integrative datase analysis in structural genomics, Mark Gerstein, Nature Structural Biology}}
+
+There are many databases that store information on structural data for many proteins or other macromolecules, some of them also contains sequence data or metabolic pathways data. Sequence data are just data on DNA so the sequences, while metabolic pathways are related to which pathway a given gene activate.
+
+Down below we can see a picture of most databases for bioinformatics data.
+\begin{figure}[h!]
+    \centering
+    \includegraphics[scale=0.3]{res/proteins_overview/pdb.png}
+    \caption{PDB-derived databases}
+\end{figure}
+
+These are all PDB-derived databases, since PDB (Protein Data Bank) was one of the first to try and build up an archive on protein structural data, and so all these database are kinda derived and inspired from the PDB archive.
+
+Lastly, we can see a figure representing the most used biological technologies for obtaining structural data.
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[scale=0.6]{res/proteins_overview/methods_structural.png}
+    \caption{Biological technologies for obtaining structural data}
+\end{figure}
+
+In our case, for protein chains and residues, the most interesting biological technologies are the first two from left:
+\begin{itemize}
+    \item X-ray cristallography;
+    \item NMR spectroscopy.
+\end{itemize}
+
+Now, to close up this chapter let's talk about one of the most important libraries in bioinformatics: BioPython.
 \subsection{BioPython}
+Regarding Computer Science the main languages used for bioinformatics are:
+\begin{itemize}
+    \item R;
+    \item Matlab;
+    \item Python.
+\end{itemize}
+For python there is the library BioPython, which is a library containing classes, functions and modules for the various necessity in bioinformatics.
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics{res/proteins_overview/biopython.png}
+\end{figure}
+
+There are a lot of subpackages under the package Bio of BioPython, in our case we are just interested in 3 subpackages:
+\begin{itemize}
+    \item \textbf{Bio.PDB}: contains classes that deal with macromolecular crystal structures. In particular it includes PDB and mmCIF parsers, the DSSP wrapper\footnote{A wrapper is a class or procedure that translates a library's existing interface into a compatible interface, it "wraps" the underlying library. It's often used to enable cross-language, in this case the wrapper enables the c++ library "DSSP" to be used in Python.}, the SASA module and the Structure class;
+    \item \textbf{Bio.Data}: collection of useful biological data, for example in our case we use it for the normalization factors for RSA;
+    \item \textbf{Bio.SeqUtils}: contains mhelper functions to deal with sequences.
+\end{itemize}
+
+In particular from Bio.PDB we use the classes:
+\begin{itemize}
+    \item \textit{PDBParser}: as the name suggests, it's a class to read a .pdb file, and save it into a variable of the type Structure class;
+    \item \textit{MMCIFParser}: similar to PDBParser, but for .mmCIF files;
+    \item \textit{DSSP}: the python wrapper for the software tool DSSP;
+    \item \textit{SASA}: a class for calculating solvent accessibility;
+    \item \textit{Polypeptide}: a class with helper functions to deal with protein chains, in particular we use the function \textbf{is\_aa()} to see if a string is an identifier for an aminoacid.
+\end{itemize}
+
+On the other hand the Bio.Data subpackage has been used just for the normalization factors for SASA, the dictionary \textit{residue\_sasa\_scales}. 
+
+And Bio.SeqUtils has been used for the helper function \textit{Seq1}, which convert protein sequence from three-letter to one-letter code (sequence of amino acids with three-letters code to sequence of amino acids with one-letter code).
+
+For more information on BioPython and its subpackages and submodules, here there is the link to the  \underline{\href{https://biopython.org/docs/dev/api/index.html}{documentation}}.
