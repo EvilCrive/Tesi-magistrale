@@ -51,6 +51,8 @@ On this predictor, the disorder propensity is calculated with the relative solve
 
 The optimal classification threshold for AlphaFold-rsa is of 0.581, which means rsa < 41.9 \%. Again the threshold was selected by maximizing F1-Score performance on the CAID DisProt dataset.
 
+\pagebreak
+
 \section{AlphaFold-binding}
 Finally we have the last predictor in the software tool AlphaFold-disorder. This is a binding predictor, which means that it predicts a statistic that represents the propensity of a residue to bind.
 
@@ -72,6 +74,9 @@ Let's quickly see the most important points in the code of this software tool. T
     \item Computation of predictions;
     \item Creating the output files.
 \end{enumerate}
+
+\pagebreak
+
 \subsection{Parsing input parameters}
 To parse input they used the library parse\_args along with Path and PurePath of the library pathlib.
 
@@ -105,6 +110,8 @@ def parse_args():
     main_parser = argparse.ArgumentParser(parents=[parent_parser])
     return main_parser.parse_args()
 \end{lstlisting}
+
+\pagebreak
 
 \subsection{Parsing input files}
 First of all the library pathlib is employed to obtain the path of the input file(s) and then we have 4 possibilities, identified through if-else 's :
