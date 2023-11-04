@@ -19,6 +19,16 @@ The professors and researchers of the laboratory published a scientific paper\ci
 
 In this chapter we will see more into detail the CAID web application and the 3 algorithms within AlphaFold-disorder.
 
+\subsection{Disorder}
+Disorder, in the context of MOlecular Biology of proteins, refers to how "out-of-order" is the structure of a part of the protein, usually a region. Two of the three algorithms inside the software tool predict the disorder propensity of a certain residue, amino acid. 
+
+This disorder propensity is a probability for that residue of being part of a disordered region. Disordered regions are quite important to study, because, as we talked in the previous chapter, proteins with intrinsically disordered regions are involved in many functions and pathologies.
+
+\subsection{Binding}
+The other algorithm within the software tool is a predictor for binding. WHich means it predicts a binding propensity for each residue, which is the probability for that residue to bind with some ligand.
+
+This binding propensity can overlapt with disorder propensity, since many disordered regions tend to have higher binding activity.
+
 \section{CAID}
 CAID, Critically Assessment of Protein Intrinsic Disorder prediction, is a web application established in 2018 to determine the state-of-art for predicting disorder and binding on IDRs, Intrinsic Disordered Regions. 
 
@@ -64,7 +74,7 @@ That T represents a threshold, obtained again from maximizing the F1-Score on th
 
 Below 0.773 the binding propensity is the value from AlphaFold-rsa(T); above 0.773 we use the pLDDT score to compute the binding propensity.
 
-\section{Code}
+\section{Analysis of the Code}
 Let's quickly see the most important points in the code of this software tool. The main points are: 
 \begin{enumerate}
 
@@ -72,15 +82,15 @@ Let's quickly see the most important points in the code of this software tool. T
     \item Parsing of input file(s);
     \item Extraction of pLDDT and RSA for each residue;
     \item Computation of predictions;
-    \item Creating the output files.
+    \item Creation of output files.
 \end{enumerate}
 
 \pagebreak
 
-\subsection{Parsing input parameters}
+\subsection{Parsing Input Parameters}
 To parse input they used the library parse\_args along with Path and PurePath of the library pathlib.
 
-\begin{lstlisting}[language=Python, caption=import\ libraries\ parsing]
+\begin{lstlisting}[language=Python, caption=import\ libraries\ parsing, label={code:parseargs}]
     import argparse
     from pathlib import Path, PurePath
 \end{lstlisting}
@@ -113,7 +123,7 @@ def parse_args():
 
 \pagebreak
 
-\subsection{Parsing input files}
+\subsection{Parsing Input Files}
 First of all the library pathlib is employed to obtain the path of the input file(s) and then we have 4 possibilities, identified through if-else 's :
 \begin{itemize}
     \item \textbf{one protein file}: so either a ".pdb" file, a ".pdb.gz", ".cif" or ".cif.gz" file;
@@ -154,7 +164,7 @@ if __name__ == '__main__':
 \end{lstlisting}
 
 
-\subsection{Extraction of residues' statistics}
+\subsection{Extraction of Residues' Statistics}
 
 This part is implemented under the main procedure "process\_pdb". To implement this procedure a few libraries have been used: the main ones are BioPython and pandas. The input parameters for the procedure are three:
 \begin{itemize}
@@ -187,7 +197,7 @@ Down below we can see an adjusted code snippet to illustrate how this extraction
 
 \vspace{2em}
 
-\begin{lstlisting}[language=Python, caption=Extraction\ residues'\ statistics]
+\begin{lstlisting}[language=Python, caption=Extraction\ residues'\ statistics, label={code:processpdb}]
 import pandas as pd
 from Bio.PDB import PDBParser, DSSP
 from Bio.PDB.MMCIFParser import FastMMCIFParser
@@ -220,6 +230,86 @@ lddt, 1 - lddt, rsa, ss))
     return df
 \end{lstlisting}
 
+\subsection{Computation of Predictions}
+We already have the predictions of AlphaFold-pLDDT, here we will describe the procedure for predictions of the other 2 algorithms: AlphaFold-RSA and AlphaFold-Binding.
+
+The procedure is called \textit{make\_prediction} and it asks as input three parameters:
+\begin{itemize}
+    \item \textbf{df}: dataframe containing the data on residue from DSSP;
+    \item \textbf{window\_rsa}: the window of residues to consider when calculating rsa;
+    \item \textbf{thresholds\_rsa}: the threshold of rsa that represent a high solvent-accessibility.
+\end{itemize}
+The last 2 parameters have a default value, based on empirical tests: 25 residues for the window\_rsa and 0.581 for the thresholds\_rsa.
+
+The default value for window\_rsa was found with grid search, with various numbers for the parameter, 25 was the best one. While for thresholds\_rsa, the default value was obtained by maximizing the F1 score, on CAID.
+
+Both in window\_rsa and in thresholds\_rsa we can have multiple values, for an easier comparison, the parameters are in fact lists of values.
+
+By default this procedure adds to the dataframe 2 columns, one for AlphaFold-RSA disorder prediction and one for AlphaFold-Binding binding prediction. With more than elements in the parameter lists of window\_rsa and thresholds\_rsa we will have more columns.
+
+Let's now analyse the code of the procedure.
+\begin{lstlisting}[language=Python, caption=Procedure make\_prediction(), numbers=left, label={code:makepred}]
+def make_prediction(df, window_rsa=[25], thresholds_rsa=[0.581]):
+    for w in window_rsa:
+        column_rsa_window='disorder-{}'.format(w)
+        half_w = int((w-1)/2)
+        tmp_pad = np.pad(df['rsa'], (half_w, half_w), 'reflect')
+        # running mean of array tmp_pad, with window: half_w*2 +1
+        df[column_rsa_window] = moving_average(tmp_pad, half_w*2 +1)
+
+        for th_rsa in thresholds_rsa:
+            column_rsa_binding = 'binding-{}-{}'.format(w, th_rsa)
+            df[column_rsa_binding] = df[column_rsa_window].copy()
+            df.loc[df[column_rsa_window]>th_rsa,column_rsa_binding] =
+df.loc[df[column_rsa_window]>th_rsa,'lddt'] * ((1-th_rsa)+th_rsa)
+        
+\end{lstlisting}
+
+At line number 6 a procedure moving\_average() is called, we will not show it here, but that procedure uses the NumPy function "convolute" to compute the running mean of an array. For To calculate running mean we slide a window along the array and compute the mean of the window's contents.
+
+While on lines 11 and 12 we have some complex computation that uses the thresholds\_rsa to transform the scores.
+\subsection{Creation of Output Files}
+Finally the data obtained from DSSP and the predictions computed are saved in 2 .tsv files. Actually the first .tsv file is done before the procedure make\_prediction, since it doesn't include the predictions' columns. For simplicity of explanation I preferred to talk about it in the same part as for the 2nd output file.
+
+This creation of output files is incorporated in the main procedure, using the function "to\_csv" provided by the Pandas library. 
+
+Let's explore the code.
+
+\begin{lstlisting}[language=Python, caption=Creation of output files]
+if __name__ == '__main__':
+    fout_path = Path(args.out)
+[...]
+    data = data.append(processed_data)
+[...]
+    fout_name = '{}/{}_data.tsv'.format(fout_path.parent, fout_path.stem)
+    # First .tsv file
+    data.to_csv(fout_name, sep='\t', quoting=csv.QUOTE_NONE, index=False, float_format='%.3f')
+[...]
+    for name, pdb_data in data.groupby('name'):
+        pred = pred.append(make_prediction(pdb_data.copy(), window_rsa=args.rsa_window,
+            thresholds_rsa=args.rsa_threshold))
+[...]
+    fout_name = '{}/{}_pred.tsv'.format(fout_path.parent, fout_path.stem)
+    pred.to_csv(fout_name, sep='\t', quoting=csv.QUOTE_NONE, index=False, float_format='%.3f')
+\end{lstlisting}
+
+fout\_path is the information of name and path provided as parameter in the invokation of the software tool from shell, obtained form the parameter .out of the result from the output dtaa structure of parse\_args procedure, seen in Code Snippet \ref{code:parseargs}.
+data is the dataframe obtained from the procedure process\_pdb, seen in Code Snippet \ref{code:processpdb}. It contains the data from the protein files and their statistics obtained with DSSP.
+pred is the dataframe obtained from the procedure make\_prediction, seen in Code Snippet \ref{code:makepred}. It contains the predictions computed in that procedure and the data from protein files and DSSP.
+
+The two file obtained are .tsv files, they can be opened with every text editor, but to see the table correctly we should open it with Microsoft Excel or the alternatives provided by Google or LibreOffice.
+
+Here we can see a screenshot representing the file of predictions in .tsv opened with LibreOffice Calc.
+
+\vspace{2em}
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[scale=1.1]{res/code/example_tsv.png}
+    \caption{An example of .tsv output file of AlphaFold-disorder}
+\end{figure}
+\vspace{15em}
+
 \section{Usage of AlphaFold-disorder software tool}
 \subsection{Dependencies}
 In order to use AlphaFold-disorder, we first need :
@@ -229,16 +319,20 @@ In order to use AlphaFold-disorder, we first need :
     \item the DSSP executable: \textbf{mkdssp};
     \item the following libraries: \textbf{BioPython}, \textbf{Numpy} and \textbf{Pandas}.
 \end{itemize}
+
 \subsection{Usage}
 To execute the software tool we can write the following command in the CLI:
-\\
+
+
 \begin{lstlisting}[language=Bash]
     python3 AlphaFold-disorder -i pdbs/ -o output
 \end{lstlisting}
+
 \vspace{1em}
+
 Instead of "output" we can write the name for output file that we desire, and instead of "pdbs/" we can give as input a protein file, a directory containing protein files or a file with the relative paths of protein files.
 \vspace{2em}
-\subsection{DSSP installation}
+\subsection{DSSP Installation}
 There are two ways to install DSSP: 
 \begin{enumerate}
     \item Download the pre-compiled file from the  \href{https://github.com/PDB-REDO/dssp/releases/tag/v4.4.0}{latest release in GitHub};
@@ -246,7 +340,7 @@ There are two ways to install DSSP:
 \end{enumerate}
 To build the source file we have to install and build a few libraries, but it's all well-document in the readme.md file of the \href{https://github.com/PDB-REDO/dssp}{DSSP repository}. 
 
-\subsection{Python libraries installation}
+\subsection{Python Libraries Installation}
 To install the 2 Python libraries required we need \textbf{Python3} and \textbf{pip3}, Package Installer for Python. Then to install the 2 Python libraries we just execute the following commands from the CLI:
 \begin{itemize}
     \item \textbf{BioPython}: pip3 install biopython;
