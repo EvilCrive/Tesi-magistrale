@@ -1,2 +1,5 @@
 \chapter{Conclusions}
 \label{chp:conclusions}
+We developed a variation of the software-tool AlphaFold-disorder, replacing DSSP with PSEA and SASA. This was done mainly to avoid the dependency with DSSP and to explore an alternative way to obtain similar predictions, reproducing papers for this development as well. Then we integrated FoldComp too, so in the future we can store thousands of proteins with less storage required.
+
+Once the development was finished we started to evaluate the results, we started with explorative plots to gain some visual insight on the features. Then we moved on to Machine Learning models to better evaluate the results. First of all we can see that AlphaFold-disorder (SASA) is on par to the AlphaFold-disorder with DSSP, which is a very good result. Then our ML models were good enough, with performance similar to the software-tools. Probably perfomances weren't better than the software-tools because we didn't have a big enough dataset for the ML models. Overall the results were quite satisfying but there is room for improvement.
