@@ -2,7 +2,7 @@
 \label{chp:alphafold-disorder}
 
 \section{Introduction}
-AlphaFold-disorder is a software tool developed by my co-supervisor Damiano Piovesan, my co-supervisor Alexander Miguel Monzon and other members of the BioComputing UP laboratory. The objective of the software tool is predicting disorder and binding of the aminoacids with high accuracy. 
+AlphaFold-disorder is a software tool developed by my co-supervisor Damiano Piovesan, my co-supervisor Alexander Miguel Monzon and other members of the BioComputing UP laboratory. The objective of the software tool is to predict disorder and binding of the amino acids with high accuracy. 
 
 The web application CAID (Critical Assessment of Protein Intrinsic Disorder), also developed by members of the BioComputing UP laboratory, was used to measure the quality of the software tool prediction.
 
@@ -13,43 +13,43 @@ In particular 3 algorithms within the tool were measured:
     \item \textbf{AlphaFold-binding}: uses pLDDT and RSA statistics to predict binding values.
 \end{itemize}
 
-Each of these algorithms produces a table containing binding, disorder and other statistics for every aminoacid, or residue\footnote{In molecular biology, a residue refers to a monomer within a polymeric chain. In the case of a protein, a residue refers to an aminoacid.}. 
+Each of these algorithms produces a table containing binding, disorder and other statistics for every amino acid, or residue\footnote{In molecular biology, a residue refers to a monomer within a polymeric chain. In the case of a protein, a residue refers to an aminoacid.}. 
 
 The professors and researchers of the laboratory published a scientific paper\cite{alphafold-disorder} regarding this software tool: Intrinsic protein disorder and conditional folding in AlphaFoldDB. 
 
-In this chapter we will see more into detail the CAID web application and the 3 algorithms within AlphaFold-disorder.
+In this chapter we will see more in detail the CAID web application and the 3 algorithms within AlphaFold-disorder.
 
 \subsection{Disorder}
-Disorder, in the context of MOlecular Biology of proteins, refers to how "out-of-order" is the structure of a part of the protein, usually a region. Two of the three algorithms inside the software tool predict the disorder propensity of a certain residue, amino acid. 
+Disorder, in the context of Molecular Biology of proteins, refers to how "out-of-order" is the structure of a part of the protein, usually a region. Two of the three algorithms inside the software tool predict the disorder propensity of a certain residue, amino acid. 
 
-This disorder propensity is a probability for that residue of being part of a disordered region. Disordered regions are quite important to study, because, as we talked in the previous chapter, proteins with intrinsically disordered regions are involved in many functions and pathologies.
+This disorder propensity is a probability for that residue of being part of a disordered region. Disordered regions are quite important to study, because, as we talked about in the previous chapter, proteins with intrinsically disordered regions are involved in many functions and pathologies.
 
 \subsection{Binding}
-The other algorithm within the software tool is a predictor for binding. WHich means it predicts a binding propensity for each residue, which is the probability for that residue to bind with some ligand.
+The other algorithm within the software tool is a predictor for binding, which means it predicts a binding propensity for each residue, namely the probability for that residue to bind with some ligand.
 
-This binding propensity can overlapt with disorder propensity, since many disordered regions tend to have higher binding activity.
+This binding propensity can overlap with disorder propensity, since many disordered regions tend to have higher binding activity.
 
 \section{CAID}
-CAID, Critically Assessment of Protein Intrinsic Disorder prediction, is a web application established in 2018 to determine the state-of-art for predicting disorder and binding on IDRs, Intrinsic Disordered Regions. 
+CAID, Critical Assessment of Protein Intrinsic Disorder prediction, is a web application established in 2018 to determine the state-of-art for predicting disorder and binding on IDRs, Intrinsic Disordered Regions. 
 
 The idea is to compare different softwares for this kind of prediction: each of them assigns to every residue of the protein the propensity for that residue to be intrinsically disordered. Accuracy of predictions are evaluated by means of ground truths, obtained by a reference, in this case the reference is the DisProt database. On CAID both software runtimes and accuracy of predictions are compared.
 
 \includegraphics[scale=.5]{res/caid_cycle.png}
 
-Here we can see a picture representing the CAID cycle: Ground Truth, Standardization, Prediction and Benchmarking. Let's analyse them a bit more in detail :
+Here we can see a picture representing the CAID cycle: Ground Truth, Standardization, Prediction and Benchmarking. Let's analyze them more in detail :
 \begin{itemize}
     \item \textbf{Ground Truth}: DisProt database was selected as reference because it contains a large number of manually curated disorder and binding annotations at a protein level. DisProt annotates association between intrinsically disordered regions and a biological function.
     \item \textbf{Standardization}: Participants submit their softwares, and the CAID organizers encapsulate code into containers, providing standardization across different machines. This also makes it easier to deploy them and to package softwares with dependencies.
-    \item \textbf{Prediction}: Running the containers implemented in the Standardization step on the Ground Truth targets generates predictions. The cluster used by CAID can execute all methods in parallel within some resource contraints (90 GB RAM, 48 threads, 4 Hours per sequence).
+    \item \textbf{Prediction}: Running the containers implemented in the Standardization step on the Ground Truth targets generates predictions. The cluster used by CAID can execute all methods in parallel within some resource constraints (90 GB RAM, 48 threads, 4 Hours per sequence).
     \item \textbf{Benchmarking}: The performances of the various methods are evaluated by a number of metrics. CAID identifies the confidence threshold to optimize the performance for a specific metric. In benchmarking and runtimes pages are reported some of the assessment results.
 \end{itemize}
 
-The 3 algorithms we mentioned earlier: AlphaFold-pLDDT, AlphaFold-rsa and AlphaFold-binding are already present in their containers on the CAID application.
+The 3 algorithms we mentioned earlier, AlphaFold-pLDDT, AlphaFold-rsa and AlphaFold-binding, are already present in their containers on the CAID application.
 
 \section{AlphaFold-pLDDT}
-This predictor is provided by the software tool AlphaFold-disorder. It's a predictor for disorder, which means that it predicts for each residue its propensity to be intrinsically disordered.
+This predictor is provided by the software tool AlphaFold-disorder. It's a predictor for disorder, which means that it predicts the propensity for each residue to be intrinsically disordered.
 
-Its predictions are based on the pLDDT, predicted Local Distance Difference Test, which is already present in .pdb files from AlphaFold predictions as the b-factor. So this algorithm just obtains a statistic representing disorder propensity for that residue, out of the b-factor.
+Its predictions are based on the pLDDT, predicted Local Distance Difference Test, which is already present in .pdb files from AlphaFold predictions as the B-factor. This algorithm just obtains a statistic representing disorder propensity for that residue, out of the B-factor.
 
 AlphaFold-pLDDT uses "1 - pLDDT" as disorder propensity. 
 
@@ -59,7 +59,7 @@ This predictor is provided by the software tool AlphaFold-disorder. This tool, a
 
 On this predictor, the disorder propensity is calculated with the relative solvent accessibility, RSA, over a local window centered on the residue whose disorder propensity we want to predict. DSSP was used to obtain the relative solvent accessibility and the optimal local window, of 25 residues, was chosen with a grid search in the range of 1 to 50 residues.
 
-The optimal classification threshold for AlphaFold-rsa is of 0.581, which means rsa < 41.9 \%. Again the threshold was selected by maximizing F1-Score performance on the CAID DisProt dataset.
+The optimal classification threshold for AlphaFold-rsa is 0.581, which means RSA < 41.9 \%. Again the threshold was selected by maximizing F1-Score performance on the CAID DisProt dataset.
 
 \pagebreak
 
@@ -177,12 +177,12 @@ The procedure can be divided in 4 steps :
 \begin{description}
     \item \textbf{1. Load structure}: the protein file is loaded and parsed into a proper data structure: "Bio.PDB.Structure", a class in BioPython that represents a macromolecular structure. This parsing is done through "Bio.PDB.PDBParser" if it's a .pdb file or with "Bio.PDB.FastMMCIFParser" if it's a .mmCIF file.
     
-    \item \textbf{2. DSSP invokation}: DSSP is a software tool used to obtain interesting statistics for each residue. The software tool is invoked through a Python wrapper\footnote{A wrapper is a class or procedure that translates a library's existing interface into a compatible interface, it "wraps" the underlying library. It's often used to enable cross-language, in this case the wrapper enables the c++ library "DSSP" to be used in Python.} class: "Bio.PDB.DSSP" provided by BioPython. 
+    \item \textbf{2. DSSP invocation}: DSSP is a software tool used to obtain interesting statistics for each residue. The software tool is invoked through a Python wrapper\footnote{A wrapper is a class or procedure that translates a library's existing interface into a compatible interface, it "wraps" the underlying library. It's often used to enable cross-language, in this case the wrapper enables the c++ library "DSSP" to be used in Python.} class: "Bio.PDB.DSSP" provided by BioPython. 
     
     \item \textbf{3. Extraction of statistics}: Finally the statistics of interests are extracted by iterating the residues. The statistics of interests are 3: 
     \begin{enumerate}
-        \item \textbf{pLDDT}: obtainable without DSSP, from the b-factor value already present in the .pdb file;
-        \item \textbf{rsa}: it represents how much the solvent can access this residue. It's provided by DSSP;
+        \item \textbf{pLDDT}: obtainable without DSSP, from the B-factor value already present in the .pdb file;
+        \item \textbf{RSA}: it represents how much the solvent can access this residue. It's provided by DSSP;
         \item \textbf{SS}: secondary structure of the residue. Also provided by DSSP.
     \end{enumerate}
     
@@ -237,7 +237,7 @@ The procedure is called \textit{make\_prediction} and it asks as input three par
 \begin{itemize}
     \item \textbf{df}: dataframe containing the data on residue from DSSP;
     \item \textbf{window\_rsa}: the window of residues to consider when calculating rsa;
-    \item \textbf{thresholds\_rsa}: the threshold of rsa that represent a high solvent-accessibility.
+    \item \textbf{thresholds\_rsa}: the threshold of rsa that represents a high solvent-accessibility.
 \end{itemize}
 The last 2 parameters have a default value, based on empirical tests: 25 residues for the window\_rsa and 0.581 for the thresholds\_rsa.
 
@@ -247,7 +247,7 @@ Both in window\_rsa and in thresholds\_rsa we can have multiple values, for an e
 
 By default this procedure adds to the dataframe 2 columns, one for AlphaFold-RSA disorder prediction and one for AlphaFold-Binding binding prediction. With more than elements in the parameter lists of window\_rsa and thresholds\_rsa we will have more columns.
 
-Let's now analyse the code of the procedure.
+Let's now analyze the code of the procedure.
 \begin{lstlisting}[language=Python, caption=Procedure make\_prediction(), numbers=left, label={code:makepred}]
 def make_prediction(df, window_rsa=[25], thresholds_rsa=[0.581]):
     for w in window_rsa:
@@ -265,10 +265,12 @@ df.loc[df[column_rsa_window]>th_rsa,'lddt'] * ((1-th_rsa)+th_rsa)
         
 \end{lstlisting}
 
-At line number 6 a procedure moving\_average() is called, we will not show it here, but that procedure uses the NumPy function "convolute" to compute the running mean of an array. For To calculate running mean we slide a window along the array and compute the mean of the window's contents.
+At line number 6 a procedure moving\_average() is invoked: the procedure uses the NumPy library to compute the \href{https://en.wikipedia.org/wiki/Moving_average}{\underline{moving average}} of an array, using \href{https://en.wikipedia.org/wiki/Convolution}{\underline{convolution}}. 
 
 While on lines 11 and 12 we have some complex computation that uses the thresholds\_rsa to transform the scores.
+
 \subsection{Creation of Output Files}
+
 Finally the data obtained from DSSP and the predictions computed are saved in 2 .tsv files. Actually the first .tsv file is done before the procedure make\_prediction, since it doesn't include the predictions' columns. For simplicity of explanation I preferred to talk about it in the same part as for the 2nd output file.
 
 This creation of output files is incorporated in the main procedure, using the function "to\_csv" provided by the Pandas library. 
@@ -293,11 +295,11 @@ if __name__ == '__main__':
     pred.to_csv(fout_name, sep='\t', quoting=csv.QUOTE_NONE, index=False, float_format='%.3f')
 \end{lstlisting}
 
-fout\_path is the information of name and path provided as parameter in the invokation of the software tool from shell, obtained form the parameter .out of the result from the output dtaa structure of parse\_args procedure, seen in Code Snippet \ref{code:parseargs}.
-data is the dataframe obtained from the procedure process\_pdb, seen in Code Snippet \ref{code:processpdb}. It contains the data from the protein files and their statistics obtained with DSSP.
-pred is the dataframe obtained from the procedure make\_prediction, seen in Code Snippet \ref{code:makepred}. It contains the predictions computed in that procedure and the data from protein files and DSSP.
+fout\_path is the information of name and path provided as parameter in the invocation of the software tool from shell, obtained form the parameter .out of the result from the output data structure of parse\_args procedure, seen in Code Snippet \ref{code:parseargs}.
+data is the DataFrame obtained from the procedure process\_pdb, seen in Code Snippet \ref{code:processpdb}. It contains the data from the protein files and their statistics obtained with DSSP.
+pred is the DataFrame obtained from the procedure make\_prediction, seen in Code Snippet \ref{code:makepred}. It contains the predictions computed in that procedure and the data from protein files and DSSP.
 
-The two file obtained are .tsv files, they can be opened with every text editor, but to see the table correctly we should open it with Microsoft Excel or the alternatives provided by Google or LibreOffice.
+The two files obtained are .tsv files, they can be opened with every text editor, but to be able to see the table correctly we should open it with Microsoft Excel or the alternatives provided by Google or LibreOffice.
 
 Here we can see a screenshot representing the file of predictions in .tsv opened with LibreOffice Calc.
 
@@ -330,7 +332,7 @@ To execute the software tool we can write the following command in the CLI:
 
 \vspace{1em}
 
-Instead of "output" we can write the name for output file that we desire, and instead of "pdbs/" we can give as input a protein file, a directory containing protein files or a file with the relative paths of protein files.
+Instead of "output" we can write the name for the output file that we desire, and instead of "pdbs/" we can give as input a protein file, a directory containing protein files or a file with the relative paths of protein files.
 \vspace{2em}
 \subsection{DSSP Installation}
 There are two ways to install DSSP: 
@@ -341,7 +343,7 @@ There are two ways to install DSSP:
 To build the source file we have to install and build a few libraries, but it's all well-document in the readme.md file of the \href{https://github.com/PDB-REDO/dssp}{DSSP repository}. 
 
 \subsection{Python Libraries Installation}
-To install the 2 Python libraries required we need \textbf{Python3} and \textbf{pip3}, Package Installer for Python. Then to install the 2 Python libraries we just execute the following commands from the CLI:
+To install the 2 Python libraries required we need \textbf{Python3} and \textbf{pip3}, Package Installer for Python. Then to install the 2 Python libraries we just have to execute the following commands from the CLI:
 \begin{itemize}
     \item \textbf{BioPython}: pip3 install biopython;
     \item \textbf{Numpy}: pip3 install numpy;

@@ -468,15 +468,15 @@ There are a lot of subpackages under the package Bio of BioPython, in our case w
 
 In particular from Bio.PDB we use the classes:
 \begin{itemize}
-    \item \textit{PDBParser}: as the name suggests, it's a class to read a .pdb file, and save it into a variable of the type Structure class;
+    \item \textit{PDBParser}: as the name suggests, it's a class which reads a .pdb file and saves it into a variable of the type Structure class;
     \item \textit{MMCIFParser}: similar to PDBParser, but for .mmCIF files;
     \item \textit{DSSP}: the python wrapper for the software tool DSSP;
     \item \textit{SASA}: a class for calculating solvent accessibility;
-    \item \textit{Polypeptide}: a class with helper functions to deal with protein chains, in particular we use the function \textbf{is\_aa()} to see if a string is an identifier for an aminoacid.
+    \item \textit{Polypeptide}: a class with helper functions to deal with protein chains, in particular we use the function \textbf{is\_aa()} to see if a string is an identifier for an amino acid.
 \end{itemize}
 
 On the other hand the Bio.Data subpackage has been used just for the normalization factors for SASA, the dictionary \textit{residue\_sasa\_scales}. 
 
-And Bio.SeqUtils has been used for the helper function \textit{Seq1}, which convert protein sequence from three-letter to one-letter code (sequence of amino acids with three-letters code to sequence of amino acids with one-letter code).
+And Bio.SeqUtils has been used for the helper function \textit{Seq1}, which converts a sequence of amino acids with three-letters code into a sequence of amino acids with one-letter code.
 
-For more information on BioPython and its subpackages and submodules, here there is the link to the  \underline{\href{https://biopython.org/docs/dev/api/index.html}{documentation}}.
+For more information on BioPython and its subpackages and submodules, here is the link to the  \underline{\href{https://biopython.org/docs/dev/api/index.html}{documentation}}.
