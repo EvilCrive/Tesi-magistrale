@@ -67,119 +67,109 @@ We made the plots using the Python library \textbf{seaborn}, in particular we us
 
 More information on seaborn, on the \href{https://seaborn.pydata.org/}\underline{{website}}.
 
+\vspace{10em}
+
 \subsection{Density plots}
 For density plots we have two setups per ground truth: for example for the binding ground truth we created the plot for every feature for residues where ground truth is 0 and another plot with every feature for residues with ground truth 1. We made equivalent plots for the disorder ground truth. Down below a few pictures to illustrate these two types of density plots.
 
-\begin{figure}[h!]
-    \begin{subfigure}{0.6\linewidth}
-        \includegraphics[width=\linewidth]{res/analysis/plots/bind0-density_all.png}
-        \caption{Density plot: every feature for residues\\binding absent}
-    \end{subfigure}
-    \begin{subfigure}{0.6\linewidth}
-        \includegraphics[width=\linewidth]{res/analysis/plots/bind1-density_all.png}
-        \caption{Density plot: every feature for residues\\binding present}
-    \end{subfigure}
-\end{figure}
-\vspace{5em}
 \pagebreak
+
+\begin{figure}[h!]
+    
+    \includegraphics[scale=0.9]{res/analysis/plots/bind1-density_all.png}
+    \caption{Density plot}
+\end{figure}
+
+This is the density plot of every feature, for the residues with binding ground truth equal to one (positive binding class).
 
 \subsection{Histogram plots}
 
 For histogram plots we made three different types per ground truth:
 
-\begin{itemize}
+\begin{enumerate}
     \item Every feature where the ground truth is 0;
     \item Every features when ground truth 1;
     \item For every feature we made a plot comparing values of that feature for residues in the two classes (ground truth=0 and ground truth=1)
+\end{enumerate}
+
+
+I will show one example of each kind of plot: 
+
+\begin{itemize}
+    \item Histogram of every feature for one class: every feature is plotted for residues belonging to one class of the ground truth;
+    \item Histogram of one feature for both classes: one feature is plotted for the 2 classes of the ground truth, so we can better compare them.
 \end{itemize}
 
-I will show the histogram plots we made for the disorder ground truth. We made equivalent plots for the binding ground truth too.
+For the second type of histogram plot, I decided to show it for the RSA feature with the disorder ground truth.
+
 \begin{figure}[h!]
-    \begin{subfigure}{0.6\linewidth}
-        \includegraphics[width=\linewidth]{res/analysis/plots/dis0-histplot_all.png}
-        \caption{Histogram plot: every feature - disorder absent}
-    \end{subfigure}
-    \vfill
-    \begin{subfigure}{0.6\linewidth}
+\centering
+    \begin{subfigure}{0.8\linewidth}
         \includegraphics[width=\linewidth]{res/analysis/plots/dis1-histplot_all.png}
-        \caption{Histogram plot: every feature - disorder present}
+        \caption{Histogram plot: every feature}
     \end{subfigure}
     \vfill
-\end{figure}
-\begin{figure}
-    \begin{subfigure}{0.6\linewidth}
+    \begin{subfigure}{0.8\linewidth}
         \includegraphics[width=\linewidth]{res/analysis/plots/hue-histplot_rsa.png}
-        \caption{Histogram plot: RSA feature - disorder present}
-    \end{subfigure}
-    \begin{subfigure}{0.6\linewidth}
-        \includegraphics[width=\linewidth]{res/analysis/plots/hue-histplot_lddt.png}
-        \caption{Histogram plot: LDDT feature - disorder present}
+        \caption{Histogram plot: RSA feature}
     \end{subfigure}
 
 \end{figure}
 
-These were histogram plots for disorder ground truth, but as for density plots we made equivalent plots for the other ground truth. For the third type of histogram plot, we showed only for 2 features: rsa and lddt, but we made them for the other features considered too.
+These plots are on the disorder ground truth, we made equivalent plots for the binding ground truth too.
 
 \subsection{Scatter plots}
 
-We made scatterplots for every possible pair of the four features we considered: (rsa, lddt), (rsa, binding-25), (rsa, disorder-25), (lddt, binding-25), (lddt, disorder-25), (disorder-25, binding-25). 
-
-For every pair we made a plot against the positive ground truth (=1) and another against the negative ground truth. So in total we made fourteen scatter plots per ground truth. We will show the scatter plots made for one of the pairs: (rsa, lddt).
+I will show the scatter plots of the pair (rsa, lddt) for binding ground truth.
 
 \begin{figure}[h!]
-    \begin{subfigure}{0.5\linewidth}
-        \includegraphics[width=\linewidth]{res/analysis/plots/dis0-scatter_rsa-lddt.png}
-        \caption{Scatterplot (rsa, lddt)\\disorder absent}
-    \end{subfigure}
-    \begin{subfigure}{0.5\linewidth}
-        \includegraphics[width=\linewidth]{res/analysis/plots/dis1-scatter_rsa-lddt.png}
-        \caption{Scatterplot (rsa, lddt)\\disorder present}
-    \end{subfigure}
-\end{figure}
-
-\pagebreak
-
-\begin{figure}[h!]
-    \begin{subfigure}{0.5\linewidth}
+    \centering
+    \begin{subfigure}{0.8\linewidth}
         \includegraphics[width=\linewidth]{res/analysis/plots/bind0-scatter_rsa-lddt.png}
-        \caption{Scatterplot (rsa, lddt)\\binding absent}
+        \caption{Scatterplot (rsa, lddt) - positive class}
     \end{subfigure}
-    \begin{subfigure}{0.5\linewidth}
+    \vfill
+    \begin{subfigure}{0.8\linewidth}
         \includegraphics[width=\linewidth]{res/analysis/plots/bind1-scatter_rsa-lddt.png}
-        \caption{Scatterplot (rsa, lddt)\\binding present}
+        \caption{Scatterplot (rsa, lddt) - negative class}
     \end{subfigure}
 \end{figure}
-\pagebreak
+
+We made four scatter plot for each pair of features: two per ground truth, one for the positive class and one for the negative class.
+
+The possible pairs for our four features are: 
+
+\begin{itemize}
+    \item (rsa, lddt);
+    \item (rsa, binding-25);
+    \item (rsa, disorder-25);
+    \item (lddt, binding-25);
+    \item (lddt, disorder-25);
+    \item (disorder-25, binding-25).
+\end{itemize}
+
+For every pair we made two plots per ground truth:
+
+\begin{itemize}
+    \item Scatter plot for positive class: only data points belonging to the positive class of the ground truth are considered;
+    \item Scatter plot for negative class.
+\end{itemize}
+
+We can see some sort of correlation from the scatter plots of rsa and lddt. Although we don't see much of a difference between negative and positive class, which means the correlation between rsa and lddt doesn't depend much from the binding.
+
+\vspace{10em}
+
 
 \subsection{Joint plots}
+The joint plots are made with the same logic of scatter plots: four plots for every pair of features (one plot for positive class and one for negative of each ground truth).
 
-Finally, the last type of plots: joint plots. Similarly as with scatter plots, we made plots for every possible pair of features, both against the positive ground truth and against the negative ground truth.
-
-Let's see the joint plots for the same pair (rsa, lddt), to compare them with the scatter plots.
-
-\begin{figure}[h!]
-    \begin{subfigure}{0.5\linewidth}
-        \includegraphics[width=\linewidth]{res/analysis/plots/dis0-jointplot_rsa-lddt.png}
-        \caption{Jointplot (rsa, lddt)\\disorder absent}
-    \end{subfigure}
-    \begin{subfigure}{0.5\linewidth}
-        \includegraphics[width=\linewidth]{res/analysis/plots/dis1-jointplot_rsa-lddt.png}
-        \caption{Jointplot (rsa, lddt)\\disorder present}
-    \end{subfigure}
-\end{figure}
-
-\pagebreak
+Let's see an example of joint plot, a joint plot of the pair (rsa, lddt) for the positive class of the disorder ground truth.
 
 \begin{figure}[h!]
-    \begin{subfigure}{0.5\linewidth}
-        \includegraphics[width=\linewidth]{res/analysis/plots/bind0-jointplot_rsa-lddt.png}
-        \caption{Jointplot (rsa, lddt)\\binding absent}
-    \end{subfigure}
-    \begin{subfigure}{0.5\linewidth}
-        \includegraphics[width=\linewidth]{res/analysis/plots/bind1-jointplot_rsa-lddt.png}
-        \caption{Jointplot (rsa, lddt)\\binding present}
-    \end{subfigure}
+    \includegraphics[width=\linewidth]{res/analysis/plots/dis1-jointplot_rsa-lddt.png}
+    \caption{Jointplot (rsa, lddt) - postive class for disorder ground truth}
 \end{figure}
+
 
 \subsection{Interpretation of Plots}
 We made thirty-eight plots compared to the binding ground truth and another thrirty-eight compared to the disorder one. 
@@ -338,7 +328,7 @@ K Nearest Neighbors is a regression model that makes predictions based on the av
 
 \begin{figure}
     \centering
-    \includegraphics[scale=0.8]{res/ML/knn.png}
+    \includegraphics[scale=0.6]{res/ML/knn.png}
     \caption{How KNN algorithm works}
 \end{figure}
 
@@ -378,6 +368,8 @@ DecisionTreeRegressor is defined in the module \textbf{tree} of the sklearn libr
 \subsection{Extra Tree}
 The extra tree is a combination of multiple decision trees, extremely randomized, to improve the performances and robustness of decision trees.
 
+ExtraTreeRegressor is defined in the module \textbf{tree} of the sklearn library.
+
 \begin{lstlisting}[language=Python, caption=Extra Tree implementation]
 from sklearn import tree
 [...]
@@ -386,9 +378,8 @@ clf.fit(X_train,y_train)
 y_pred = clf.predict(X_test)
 \end{lstlisting}
 
-ExtraTreeRegressor is defined in the module \textbf{tree} of the sklearn library.
 
-\vspace{5em}
+
 
 \section{Evaluation of ML models' predictions}
 
@@ -403,26 +394,14 @@ We will see the ROC curves and the Precision-Recall curves divided by ground tru
 \subsection{Disorder PDB}
 
 \begin{figure}[h!]
-    \begin{subfigure}{1.1\linewidth}
-        \includegraphics[width=\linewidth]{res/ML/roc-disorderpdb-total.png}
-    \end{subfigure}
-    
-    \begin{subfigure}{0.8\linewidth}
-        \includegraphics[width=\linewidth]{res/ML/roc-disorderpdb.png}
-    \end{subfigure}
+    \centering
+    \includegraphics[scale = 0.8]{res/ML/roc-disorderpdb.png}
     \caption{ROC curves - DisorderPDB ground truth}
 \end{figure}
 
-\pagebreak
-
 \begin{figure}[h!]
-    \begin{subfigure}{1.1\linewidth}
-        \includegraphics[width=\linewidth]{res/ML/precisionrecall-disorderpdb-total.png}
-    \end{subfigure}
-    
-    \begin{subfigure}{0.8\linewidth}
-        \includegraphics[width=\linewidth]{res/ML/precisionrecall-disorderpdb.png}
-    \end{subfigure}
+    \centering
+    \includegraphics[scale = 0.8]{res/ML/precisionrecall-disorderpdb.png}
     \caption{Precision-Recall curves - DisorderPDB ground truth}
 \end{figure}
 
@@ -431,54 +410,32 @@ We will see the ROC curves and the Precision-Recall curves divided by ground tru
 \subsection{Disorder NOX}
 
 \begin{figure}[h!]
-    \begin{subfigure}{1.1\linewidth}
-        \includegraphics[width=\linewidth]{res/ML/roc-disordernox-total.png}
-    \end{subfigure}
-    
-    \begin{subfigure}{0.8\linewidth}
-        \includegraphics[width=\linewidth]{res/ML/roc-disordernox.png}
-    \end{subfigure}
+    \centering
+    \includegraphics[scale = 0.8]{res/ML/roc-disordernox.png}
     \caption{ROC curves - DisorderNOX ground truth}
 \end{figure}
 
-\pagebreak
+
 
 \begin{figure}[h!]
-    \begin{subfigure}{1.1\linewidth}
-        \includegraphics[width=\linewidth]{res/ML/precisionrecall-disordernox-total.png}
-    \end{subfigure}
-    
-    \begin{subfigure}{0.8\linewidth}
-        \includegraphics[width=\linewidth]{res/ML/precisionrecall-disordernox.png}
-    \end{subfigure}
+    \centering
+    \includegraphics[scale = 0.8]{res/ML/precisionrecall-disordernox.png}
     \caption{Precision-Recall curves - DisorderNOX ground truth}
 \end{figure}
 
 \pagebreak
-\pagebreak
+
 \subsection{Binding}
 
 \begin{figure}[h!]
-    \begin{subfigure}{1.1\linewidth}
-        \includegraphics[width=\linewidth]{res/ML/roc-binding-total.png}
-    \end{subfigure}
-    
-    \begin{subfigure}{0.8\linewidth}
-        \includegraphics[width=\linewidth]{res/ML/roc-binding.png}
-    \end{subfigure}
+    \centering
+    \includegraphics[scale = 0.8]{res/ML/roc-binding.png}
     \caption{ROC curves - Binding ground truth}
 \end{figure}
 
-\pagebreak
-
 \begin{figure}[h!]
-    \begin{subfigure}{1.1\linewidth}
-        \includegraphics[width=\linewidth]{res/ML/precisionrecall-binding-total.png}
-    \end{subfigure}
-    
-    \begin{subfigure}{0.8\linewidth}
-        \includegraphics[width=\linewidth]{res/ML/precisionrecall-binding.png}
-    \end{subfigure}
+    \centering
+    \includegraphics[scale = 0.8]{res/ML/precisionrecall-binding.png}
     \caption{Precision-Recall curves - Binding ground truth}
 \end{figure}
 
