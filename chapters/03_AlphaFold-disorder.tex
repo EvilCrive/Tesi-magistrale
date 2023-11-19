@@ -34,7 +34,12 @@ CAID, Critical Assessment of Protein Intrinsic Disorder prediction, is a web app
 
 The idea is to compare different softwares for this kind of prediction: each of them assigns to every residue of the protein the propensity for that residue to be intrinsically disordered. Accuracy of predictions are evaluated by means of ground truths, obtained by a reference, in this case the reference is the DisProt database. On CAID both software runtimes and accuracy of predictions are compared.
 
-\includegraphics[scale=.5]{res/caid_cycle.png}
+\begin{figure}
+    \centering
+    \includegraphics[scale=.5]{res/caid_cycle.png}
+    \caption{CAID cycle}
+\end{figure}
+
 
 Here we can see a picture representing the CAID cycle: Ground Truth, Standardization, Prediction and Benchmarking. Let's analyze them more in detail :
 \begin{itemize}
@@ -45,6 +50,8 @@ Here we can see a picture representing the CAID cycle: Ground Truth, Standardiza
 \end{itemize}
 
 The 3 algorithms we mentioned earlier, AlphaFold-pLDDT, AlphaFold-rsa and AlphaFold-binding, are already present in their containers on the CAID application.
+
+\pagebreak
 
 \section{AlphaFold-pLDDT}
 This predictor is provided by the software tool AlphaFold-disorder. It's a predictor for disorder, which means that it predicts the propensity for each residue to be intrinsically disordered.
@@ -67,8 +74,13 @@ The optimal classification threshold for AlphaFold-rsa is 0.581, which means RSA
 Finally we have the last predictor in the software tool AlphaFold-disorder. This is a binding predictor, which means that it predicts a statistic that represents the propensity of a residue to bind.
 
 This predictor makes use of both the pLDDT and the RSA calculated for the other 2 predictors: in the scientific paper \cite{alphafold-disorder} that describes the software tool AlphaFold-disorder, we can see the relation between RSA, pLDDT and this binding propensity.
+\begin{figure}
+    \centering
+    \includegraphics[scale=.7]{res/alphafold-binding.png}
+    \caption{From AlphaFold paper}
+    \label{fig:enter-label}
+\end{figure}
 
-\includegraphics[scale=.7]{res/alphafold-binding.png}
 
 That T represents a threshold, obtained again from maximizing the F1-Score on the CAID DisProt dataset. The optimal threshold found with CAID is 0.773. 
 
@@ -303,14 +315,28 @@ The two files obtained are .tsv files, they can be opened with every text editor
 
 Here we can see a screenshot representing the file of predictions in .tsv opened with LibreOffice Calc.
 
-\vspace{2em}
-
-\begin{figure}[h!]
+\begin{table}[h!]
     \centering
-    \includegraphics[scale=1.1]{res/code/example_tsv.png}
-    \caption{An example of .tsv output file of AlphaFold-disorder}
-\end{figure}
-\vspace{15em}
+    \begin{tabular}{c|c|c|c|c|c|c|c|c}
+        \textbf{name} & \textbf{pos} & \textbf{aa} & \textbf{lddt} & \textbf{disorder} & \textbf{rsa} & \textbf{ss} & \textbf{disorder-25} & \textbf{binding-25-0.581} \\
+        \hline
+        109m & 1 & M & 0.299 & 0.701 & 0.198 & C & 0.098 & 0.098 \\
+        109m & 2 & V & 0.254 & 0.746 & 0.362 & C & 0.089 & 0.089 \\
+        109m & 3 & L & 0.196 & 0.803 & 0.021 & C & 0.088 & 0.088 \\
+        109m & 4 & S & 0.171 & 0.829 & 0.086 & C & 0.09 & 0.09 \\
+        109m & 5 & E & 0.163 & 0.837 & 0.149 & H & 0.099 & 0.099 \\
+        109m & 6 & G & 0.159 & 0.841 & 0.031 & H & 0.092 & 0.092 \\
+        109m & 7 & E & 0.134 & 0.866 & 0.016 & H & 0.099 & 0.099 \\
+        109m & 8 & W & 0.127 & 0.873 & 0 & H & 0.109 & 0.109 \\
+        109m & 9 & Q & 0.123 & 0.877 & 0.169 & H & 0.109 & 0.109 \\
+        109m & 10 & L & 0.12 & 0.88 & 0.038 & H & 0.109 & 0.109 \\
+        109m & 11 & V & 0.11 & 0.89 & 0 & H & 0.109 & 0.109 \\
+        109m & 12 & L & 0.12 & 0.88 & 0.019 & H & 0.108 & 0.108 \\
+        109m & 13 & H & 0.12 & 0.88 & 0.239 & H & 0.093 & 0.093 \\
+    \end{tabular}
+    \caption{Columns of an AlphaFold-disorder output file}
+    \label{tab:dataset}
+\end{table}
 
 \section{Usage of AlphaFold-disorder software tool}
 \subsection{Dependencies}

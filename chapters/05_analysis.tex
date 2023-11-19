@@ -22,18 +22,9 @@ The software-tool produces two output files:
 \end{itemize}
 We will consider only the latter one, since it includes the first one inside. The name of the files depends on the parameter given by command line when using the software-tool. 
 
-Both in AlphaFold-disorder dataset and AlphaFold-disorder (SASA) dataset we have the same columns, down below an example of first rows of such a dataset.
+Both in AlphaFold-disorder dataset and AlphaFold-disorder (SASA) dataset we have the same columns, an example of such a dataset in table \ref{tab:dataset}.
 
-\begin{table}[h!]
-    \centering
-    \begin{tabular}{c|c|c|c|c|c|c|c|c}
-        \textbf{name} & \textbf{pos} & \textbf{aa} & \textbf{lddt} & \textbf{disorder} & \textbf{rsa} & \textbf{ss} & \textbf{disorder-25} & \textbf{binding-25-0.581} \\
-        \hline
-        109m & 1 & M & 0.299 & 0.701 & 0.198 & C & 0.098 & 0.098 \\
-        109m & 2 & V & 0.254 & 0.746 & 0.362 & C & 0.089 & 0.089 \\
-    \end{tabular}
-    \caption{Columns of an AlphaFold-disorder (SASA) output file}
-\end{table}
+
 
 Let's continue the analysis by creating a few plots, to visualize any pattern or relationship between columns and gain some insight.
 
