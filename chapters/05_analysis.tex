@@ -25,96 +25,47 @@ We will consider only the latter one, since it includes the first one inside. Th
 Both in AlphaFold-disorder dataset and AlphaFold-disorder (SASA) dataset we have the same columns, an example of such a dataset in table \ref{tab:dataset}.
 
 
+\section{Exploratory Plots}
 
-Let's continue the analysis by creating a few plots, to visualize any pattern or relationship between columns and gain some insight.
+We produced some plots to explore the distributions of the various features and visualize their trends.
 
-\section{Plots}
-We obtained the ground truth from the CAID web application, and we considered the structural features of the proteins present in these ground truths. These ground truths are simply lists of "0", "-" and "1" for each residue in some proteins: 0 when that characteristic is absent, 1 when is present and - when it's uncertain. We described this procedure to obtain and process the CAID ground truths in \ref{analysis-procedures}.
+We obtained the ground truth from the CAID portal, and we considered the structural features of the proteins present in these ground truths. These ground truths are lists of "0", "-" and "1" for each residue in some proteins: respectively absent, present and uncertain. We described the procedure to obtain and process the CAID ground truths in \ref{analysis-procedures}.
 
-We tried a few different plots, to compare the relationships between the most important features of the datasets: 
+The features we considered are:
 
 \begin{itemize}
-    \item lddt;
-    \item rsa;
+    \item LDDT;
+    \item RSA;
     \item disorder-25;
     \item binding-25.
 \end{itemize}
 
 Disorder-25 and Binding-25 are respectively the predictions of AlphaFold-rsa and AlphaFold-binding.
 
-We can categorize the plot we made in two:
-
-\begin{enumerate}
-    \item By ground truth used:
-        \begin{itemize}
-            \item Binding: ground truth on binding, which is basically an array with an annotation for every residue, 1 if it's a residue that binds with other residues or molecules, 0 otherwise;
-            \item Disorder: same but on disorder.
-        \end{itemize}
-    \item By type of plot:
-        \begin{itemize}
-            \item Density plot;
-            \item Histograms;
-            \item Jointplot;
-            \item Scatterplot.
-        \end{itemize}
-\end{enumerate}
-
-We made the plots using the Python library \textbf{seaborn}, in particular we used the procedures scatterplot, kdeplot, jointplot and histplot. While the other are obvious, to create density plots we used the kdeplot procedures.
-
-More information on seaborn, on the \href{https://seaborn.pydata.org/}\underline{{website}}.
+We have two ground truths for disorder and one for binding, we made plots per class: positive disorder and negative, and for binding too.
+We made density plots, histograms and scatterplots, using the Python library \href{https://seaborn.pydata.org/}\underline{{seaborn}}.
 
 \vspace{10em}
 
-\subsection{Density plots}
-For density plots we have two setups per ground truth: for example for the binding ground truth we created the plot for every feature for residues where ground truth is 0 and another plot with every feature for residues with ground truth 1. We made equivalent plots for the disorder ground truth. Down below a few pictures to illustrate these two types of density plots.
-
-\pagebreak
-
 \begin{figure}[h!]
-    
-    \includegraphics[scale=0.9]{res/analysis/plots/bind1-density_all.png}
-    \caption{Density plot}
+    \centering
+    \includegraphics{res/analysis/plots/dis1-histplot_all.png}
+    \caption{Histogram of the features considered, with respect to disorder ground truth (positive class)}
+    \label{fig:hist}
 \end{figure}
 
-This is the density plot of every feature, for the residues with binding ground truth equal to one (positive binding class).
-
-\subsection{Histogram plots}
-
-For histogram plots we made three different types per ground truth:
-
-\begin{enumerate}
-    \item Every feature where the ground truth is 0;
-    \item Every features when ground truth 1;
-    \item For every feature we made a plot comparing values of that feature for residues in the two classes (ground truth=0 and ground truth=1)
-\end{enumerate}
-
-
-I will show one example of each kind of plot: 
-
-\begin{itemize}
-    \item Histogram of every feature for one class: every feature is plotted for residues belonging to one class of the ground truth;
-    \item Histogram of one feature for both classes: one feature is plotted for the 2 classes of the ground truth, so we can better compare them.
-\end{itemize}
-
-For the second type of histogram plot, I decided to show it for the RSA feature with the disorder ground truth.
-
 \begin{figure}[h!]
-\centering
-    \begin{subfigure}{0.8\linewidth}
-        \includegraphics[width=\linewidth]{res/analysis/plots/dis1-histplot_all.png}
-        \caption{Histogram plot: every feature}
-    \end{subfigure}
-    \vfill
-    \begin{subfigure}{0.8\linewidth}
-        \includegraphics[width=\linewidth]{res/analysis/plots/hue-histplot_rsa.png}
-        \caption{Histogram plot: RSA feature}
-    \end{subfigure}
-
+    \centering
+    \includegraphics{res/analysis/plots/hue-histplot_rsa.png}
+    \caption{Histogram of the RSA feature, with respect to disorder ground truth (both classes)}
+    \label{fig:histRsa}
 \end{figure}
 
-These plots are on the disorder ground truth, we made equivalent plots for the binding ground truth too.
+In figure \ref{fig:hist} we have plotted the distribution of the features considered in this analysis, for residues with disorder ground truth equal to one.
 
-\subsection{Scatter plots}
+In figure \ref{fig:histRsa} we have another histogram, for the RSA feature both for disorder ground truth equal to zero (negative class) and for disorder ground truth equal to one (positive class).
+
+Another kind of plot we made are scatterplots: we made them between all pairs of the four considered features, to visualize any possible trend, in particular trends related with frequency.
 
 I will show the scatter plots of the pair (rsa, lddt) for binding ground truth.
 
@@ -131,48 +82,8 @@ I will show the scatter plots of the pair (rsa, lddt) for binding ground truth.
     \end{subfigure}
 \end{figure}
 
-We made four scatter plot for each pair of features: two per ground truth, one for the positive class and one for the negative class.
 
-The possible pairs for our four features are: 
-
-\begin{itemize}
-    \item (rsa, lddt);
-    \item (rsa, binding-25);
-    \item (rsa, disorder-25);
-    \item (lddt, binding-25);
-    \item (lddt, disorder-25);
-    \item (disorder-25, binding-25).
-\end{itemize}
-
-For every pair we made two plots per ground truth:
-
-\begin{itemize}
-    \item Scatter plot for positive class: only data points belonging to the positive class of the ground truth are considered;
-    \item Scatter plot for negative class.
-\end{itemize}
-
-We can see some sort of correlation from the scatter plots of rsa and lddt. Although we don't see much of a difference between negative and positive class, which means the correlation between rsa and lddt doesn't depend much from the binding.
-
-\vspace{10em}
-
-
-\subsection{Joint plots}
-The joint plots are made with the same logic of scatter plots: four plots for every pair of features (one plot for positive class and one for negative of each ground truth).
-
-Let's see an example of joint plot, a joint plot of the pair (rsa, lddt) for the positive class of the disorder ground truth.
-
-\begin{figure}[h!]
-    \includegraphics[width=\linewidth]{res/analysis/plots/dis1-jointplot_rsa-lddt.png}
-    \caption{Jointplot (rsa, lddt) - postive class for disorder ground truth}
-\end{figure}
-
-
-\subsection{Interpretation of Plots}
-We made thirty-eight plots compared to the binding ground truth and another thrirty-eight compared to the disorder one. 
-
-We can clearly see that there is some correlation between the features, we can confirm that disorder and lddt are strictly correlated, and that rsa is correlated both with disorder and binding. 
-
-To further explore and better evaluate the results, we decided to develop a few ML model and compare the precision-recall and ROC plots to the benchmark ones (AlphaFold-plddt, AlphaFold-rsa and AlphaFold-binding).
+To further explore the results, we decided to develop some ML models and compare their Precision-Recall and ROC plots to the benchmark ones (AlphaFold-plddt, AlphaFold-rsa and AlphaFold-binding).
 
 \section{ML models}
 For the machine learning models we considered two different ground truths for disorder and one for binding:
@@ -420,15 +331,17 @@ We will see the ROC curves and the Precision-Recall curves divided by ground tru
 
 \subsection{Disorder PDB}
 
+In this pair of plots we see the ROC curves and Precision-Recall Curves, using disorder pdb as the ground truth. We can observe that AlphaFold-rsa (SASA) is a bit better than AlphaFold-rsa in both curves, a similar trend we have for AlphaFold-pLDDT (SASA) and AlphaFold-pLDDT. Finally the best ML model, LASSO, is within the average accuracy of the two software tools.
+
 \begin{figure}[h!]
     \centering
-    \includegraphics[scale = 0.8]{res/ML/roc-disorderpdb.png}
+    \includegraphics[scale = 0.73]{res/ML/roc-disorderpdb.png}
     \caption{ROC curves - DisorderPDB ground truth}
 \end{figure}
 
 \begin{figure}[h!]
     \centering
-    \includegraphics[scale = 0.8]{res/ML/precisionrecall-disorderpdb.png}
+    \includegraphics[scale = 0.73]{res/ML/precisionrecall-disorderpdb.png}
     \caption{Precision-Recall curves - DisorderPDB ground truth}
 \end{figure}
 
@@ -436,9 +349,11 @@ We will see the ROC curves and the Precision-Recall curves divided by ground tru
 
 \subsection{Disorder NOX}
 
+Here we used disorder NOX as the ground truth. Here AlphaFold-rsa (SASA) is quite better than AlphaFold-rsa in both curves, a similar trend we have for AlphaFold-pLDDT (SASA) and AlphaFold-pLDDT. Finally the ML model is within the accuracy of the two software tools, although it's better than both the predictors of the original AlphaFold-disorder.
+
 \begin{figure}[h!]
     \centering
-    \includegraphics[scale = 0.8]{res/ML/roc-disordernox.png}
+    \includegraphics[scale = 0.73]{res/ML/roc-disordernox.png}
     \caption{ROC curves - DisorderNOX ground truth}
 \end{figure}
 
@@ -446,7 +361,7 @@ We will see the ROC curves and the Precision-Recall curves divided by ground tru
 
 \begin{figure}[h!]
     \centering
-    \includegraphics[scale = 0.8]{res/ML/precisionrecall-disordernox.png}
+    \includegraphics[scale = 0.73]{res/ML/precisionrecall-disordernox.png}
     \caption{Precision-Recall curves - DisorderNOX ground truth}
 \end{figure}
 
@@ -454,15 +369,16 @@ We will see the ROC curves and the Precision-Recall curves divided by ground tru
 
 \subsection{Binding}
 
+In this last couple of plots, we consider binding as the ground truth. In both curves, for the major part, AlphaFld-binding (SASA) has better predictions than AlphaFold-binding and of the ML model. 
 \begin{figure}[h!]
     \centering
-    \includegraphics[scale = 0.8]{res/ML/roc-binding.png}
+    \includegraphics[scale = 0.75]{res/ML/roc-binding.png}
     \caption{ROC curves - Binding ground truth}
 \end{figure}
 
 \begin{figure}[h!]
     \centering
-    \includegraphics[scale = 0.8]{res/ML/precisionrecall-binding.png}
+    \includegraphics[scale = 0.75]{res/ML/precisionrecall-binding.png}
     \caption{Precision-Recall curves - Binding ground truth}
 \end{figure}
 

@@ -1,5 +1,14 @@
 \chapter{Conclusions}
 \label{chp:conclusions}
-We developed a variation of the software-tool AlphaFold-disorder, replacing DSSP with PSEA and SASA. This was done mainly to avoid the dependency with DSSP and to explore an alternative way to obtain similar predictions, reproducing papers for this development as well. Then we integrated FoldComp too, so in the future we can store thousands of proteins with less storage required.
+We developed a variation of the software-tool AlphaFold-disorder, replacing DSSP with PSEA and SASA. This was done mainly to avoid the dependency with DSSP and to explore an alternative way to obtain similar predictions, reproducing papers for this development as well. 
 
-Once the development was finished we started to evaluate the results, we started with explorative plots to gain some visual insight on the features. Then we moved on to Machine Learning models to better evaluate the results. First of all we can see that AlphaFold-disorder (SASA) is on par to the AlphaFold-disorder with DSSP, which is a very good result. Then our ML models were good enough, with performance similar to the software-tools. Probably perfomances weren't better than the software-tools because we didn't have a big enough dataset for the ML models. Overall the results were quite satisfying but there is room for improvement.
+AlphaFold-disorder (SASA) allows .fcz files, with the integrated FoldComp, so in the future we can store thousands of proteins with less storage required. A .fcz file contains the same data as a .pdb file with way lower size (around eight times smaller than .pdb).
+
+Once the development was finished we started to evaluate the results, we started with explorative plots to gain some visual insight on the features. We used histogram plots to visualize the distributions of the features, related to the ground truth: both for each ground truth's class and then with both classes in the same plot for an easier visualization.
+Then we  plotted scatterplots between pairs of features to visualize possible trends between two features, even in this case we did them for every ground truth, for both classes. 
+
+Then we tried to develop a ML model using AlphaFold-disorder (SASA) results to obtain predictions with higher accuracy. We used two thousands and five hundred proteins for training data, proteins from DisProt. The results were not as good as we hoped, but they just predicted what the software tool predicted, we probably a way bigger dataset for any meaningful increase in accuracy.
+
+\pagebreak
+
+We compared AlphaFold-disorder (SASA) with AlphaFold-disorder with ROC curves and Precision-Recall curves. The variation we developed of the software tool has better ROC and PRecision-Recall curves than the original AlphaFold-disorder software tool. We can conclude the quality of results of the new software tool slightly improved or at least is on par.
