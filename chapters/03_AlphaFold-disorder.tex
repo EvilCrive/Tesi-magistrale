@@ -1,10 +1,36 @@
 \chapter{Analysis of AlphaFold-disorder}
 \label{chp:alphafold-disorder}
 
-\section{Introduction}
-AlphaFold-disorder is a software tool developed by my co-supervisor Damiano Piovesan, my co-supervisor Alexander Miguel Monzon and other members of the BioComputing UP laboratory. The objective of the software tool is to predict disorder and binding of the amino acids with high accuracy. 
 
-The web application CAID (Critical Assessment of Protein Intrinsic Disorder), also developed by members of the BioComputing UP laboratory, was used to measure the quality of the software tool prediction.
+\section{Introduction}
+
+\subsection{AlphaFold}
+AlphaFold is a deep learning system developed by DeepMind. It's designed to predict protein folding, which is very important to study the protein functions.
+
+It uses deep networks to predict the three-dimensional structure of proteins.
+
+\subsection{pLDDT}
+
+pLDDT (per-residue Local Distance Difference Test) is a metric used by AlphaFold to indicate the confidence of predictions.
+
+A high pLDDT score indicates higher confidence in the predicted 3D position of that residue in the protein structure. AlphaFOld obtains it by computing the distances between the predicted position and the experimentally observed position of the residue.
+
+
+\subsection{Disorder}
+Disorder, in the context of Molecular Biology of proteins, refers to how "out-of-order" is the structure of a part of the protein, usually a region. Two of the three algorithms inside the software tool predict the disorder propensity of a certain residue, amino acid. 
+
+This disorder propensity is a probability for that residue of being part of a disordered region. Disordered regions are quite important to study, because, as we talked about in the previous chapter, proteins with intrinsically disordered regions are involved in many functions and pathologies.
+
+\subsection{Binding}
+The other algorithm within the software tool is a predictor for binding, which means it predicts a binding propensity for each residue, namely the probability for that residue to bind with some ligand.
+
+This binding propensity can overlap with disorder propensity, since many disordered regions tend to have higher binding activity.
+
+\section{AlphaFold-disorder}
+
+AlphaFold-disorder is a software tool developed by Damiano Piovesan, Alexander Miguel Monzon and other members of the BioComputing UP laboratory. The objective of the software tool is to predict disorder and binding of the amino acids with high accuracy. 
+
+The CAID portal (Critical Assessment of Protein Intrinsic Disorder) \cite{caid}, also developed by members of the BioComputing UP laboratory, was used to measure the quality of the software tool prediction.
 
 In particular 3 algorithms within the tool were measured: 
 \begin{itemize}
@@ -19,25 +45,17 @@ The professors and researchers of the laboratory published a scientific paper\ci
 
 In this chapter we will see more in detail the CAID web application and the 3 algorithms within AlphaFold-disorder.
 
-\subsection{Disorder}
-Disorder, in the context of Molecular Biology of proteins, refers to how "out-of-order" is the structure of a part of the protein, usually a region. Two of the three algorithms inside the software tool predict the disorder propensity of a certain residue, amino acid. 
-
-This disorder propensity is a probability for that residue of being part of a disordered region. Disordered regions are quite important to study, because, as we talked about in the previous chapter, proteins with intrinsically disordered regions are involved in many functions and pathologies.
-
-\subsection{Binding}
-The other algorithm within the software tool is a predictor for binding, which means it predicts a binding propensity for each residue, namely the probability for that residue to bind with some ligand.
-
-This binding propensity can overlap with disorder propensity, since many disordered regions tend to have higher binding activity.
-
 \section{CAID}
 CAID, Critical Assessment of Protein Intrinsic Disorder prediction, is a web application established in 2018 to determine the state-of-art for predicting disorder and binding on IDRs, Intrinsic Disordered Regions. 
+
+The scientific paper for CAID portal is \cite{caid}.
 
 The idea is to compare different softwares for this kind of prediction: each of them assigns to every residue of the protein the propensity for that residue to be intrinsically disordered. Accuracy of predictions are evaluated by means of ground truths, obtained by a reference, in this case the reference is the DisProt database. On CAID both software runtimes and accuracy of predictions are compared.
 
 \begin{figure}
     \centering
     \includegraphics[scale=.5]{res/caid_cycle.png}
-    \caption{CAID cycle}
+    \caption{CAID cycle \cite{caid}}
 \end{figure}
 
 
@@ -51,10 +69,8 @@ Here we can see a picture representing the CAID cycle: Ground Truth, Standardiza
 
 The 3 algorithms we mentioned earlier, AlphaFold-pLDDT, AlphaFold-rsa and AlphaFold-binding, are already present in their containers on the CAID application.
 
-\pagebreak
-
 \section{AlphaFold-pLDDT}
-This predictor is provided by the software tool AlphaFold-disorder. It's a predictor for disorder, which means that it predicts the propensity for each residue to be intrinsically disordered.
+This predictor is provided by the software tool AlphaFold-disorder. It's a indicator of presence of disorder, it predicts the propensity for each residue to be intrinsically disordered.
 
 Its predictions are based on the pLDDT, predicted Local Distance Difference Test, which is already present in .pdb files from AlphaFold predictions as the B-factor. This algorithm just obtains a statistic representing disorder propensity for that residue, out of the B-factor.
 
@@ -62,32 +78,34 @@ AlphaFold-pLDDT uses "1 - pLDDT" as disorder propensity.
 
 The optimal classification threshold found with CAID is 0.312, representing pLDDT <68.8 \%, this threshold was selected by maximizing the F1-Score performance on the CAID DisProt dataset.
 \section{AlphaFold-rsa}
-This predictor is provided by the software tool AlphaFold-disorder. This tool, as the last one we talked about, is also a predictor for disorder.
 
-On this predictor, the disorder propensity is calculated with the relative solvent accessibility, RSA, over a local window centered on the residue whose disorder propensity we want to predict. DSSP was used to obtain the relative solvent accessibility and the optimal local window, of 25 residues, was chosen with a grid search in the range of 1 to 50 residues.
+
+AlphaFold-rsa is another indicator of presence of disorder, within the software tool AlphaFold-disorder.
+
+The disorder propensity is calculated with the relative solvent accessibility, RSA, over a local window centered on the residue whose disorder propensity we want to predict. DSSP was used to obtain the relative solvent accessibility and the optimal local window, of 25 residues, was chosen with a grid search in the range of 1 to 50 residues.
 
 The optimal classification threshold for AlphaFold-rsa is 0.581, which means RSA < 41.9 \%. Again the threshold was selected by maximizing F1-Score performance on the CAID DisProt dataset.
 
 \pagebreak
 
 \section{AlphaFold-binding}
-Finally we have the last predictor in the software tool AlphaFold-disorder. This is a binding predictor, which means that it predicts a statistic that represents the propensity of a residue to bind.
+Finally we have the last predictor in the software tool AlphaFold-disorder. This infer the binding propensity on disordered residues: disordered residues tend to have higher binding propensity (probability that residue has to bind with other molecules).
 
 This predictor makes use of both the pLDDT and the RSA calculated for the other 2 predictors: in the scientific paper \cite{alphafold-disorder} that describes the software tool AlphaFold-disorder, we can see the relation between RSA, pLDDT and this binding propensity.
 \begin{figure}
     \centering
     \includegraphics[scale=.7]{res/alphafold-binding.png}
-    \caption{From AlphaFold paper}
+    \caption{From AlphaFold paper \cite{alphafold-disorder}}
     \label{fig:enter-label}
 \end{figure}
 
 
-That T represents a threshold, obtained again from maximizing the F1-Score on the CAID DisProt dataset. The optimal threshold found with CAID is 0.773. 
+The parameter T represents a threshold, obtained again from maximizing the F1-Score on the CAID DisProt dataset. The optimal threshold found with CAID is 0.773. 
 
 Below 0.773 the binding propensity is the value from AlphaFold-rsa(T); above 0.773 we use the pLDDT score to compute the binding propensity.
 
 \section{Analysis of the Code}
-Let's quickly see the most important points in the code of this software tool. The main points are: 
+The main points are: 
 \begin{enumerate}
 
     \item Parsing of input parameters;
@@ -107,7 +125,7 @@ To parse input they used the library parse\_args along with Path and PurePath of
     from pathlib import Path, PurePath
 \end{lstlisting}
 
-Parse args it's used to parse parameters given in terminal, when using the software tool. These are the main parameters:
+The procedure "parse\_args()" is used to parse parameters given in terminal, when using the software tool. These are the main parameters:
 \begin{itemize}
     \item \textbf{-\vspace{0.1cm}-in-struct (-i)}: the input file(s). Either a single file, folder or file listing containing the relative paths of .PDB or .mmCIF files;
     \item \textbf{-\vspace{0.1cm}-out (-o)}: name for the output file(s).
@@ -311,9 +329,6 @@ fout\_path is the information of name and path provided as parameter in the invo
 data is the DataFrame obtained from the procedure process\_pdb, seen in Code Snippet \ref{code:processpdb}. It contains the data from the protein files and their statistics obtained with DSSP.
 pred is the DataFrame obtained from the procedure make\_prediction, seen in Code Snippet \ref{code:makepred}. It contains the predictions computed in that procedure and the data from protein files and DSSP.
 
-The two files obtained are .tsv files, they can be opened with every text editor, but to be able to see the table correctly we should open it with Microsoft Excel or the alternatives provided by Google or LibreOffice.
-
-Here we can see a screenshot representing the file of predictions in .tsv opened with LibreOffice Calc.
 
 \begin{table}[h!]
     \centering

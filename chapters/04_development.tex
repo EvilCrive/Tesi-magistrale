@@ -1,25 +1,26 @@
 \chapter{AlphaFold-disorder (SASA): Development of Procedures}
 \label{chp:development}
-In this chapter we will talk about the actual development part of the thesis. We worked on three procedures:
+We developed a variation of AlphaFold disorder: \textbf{AlphaFold-disorder (SASA)}. We developed a procedure to compute secondary structure of residues (PSEA algorithm) and a procedure to compute RSA, using the SASA algorithm.
+
+In this chapter I will show the actual development part of the thesis. We worked on three different procedures:
 \begin{itemize}
     \item \textbf{Detection of secondary structure using protein atomic coordinates}: development of a procedure that assigns to each residue its secondary structure. It's based on P-SEA algorithm, described in this scientific paper\cite{psea};
     \item \textbf{Computation of RSA, using Shrake-Rupley algorithm}: We calculated SASA using Shrake-Rupley algorithm and then computed RSA with normalization factors;
     \item \textbf{Implementation of FoldComp library}: for reading protein files in .fcz, which is a compression of .pdb files.
 \end{itemize}
-Let's analyse the process of development for each of these procedure.
 
 \section{Secondary Structure Detection with Protein Atomic Coordinates}
 \subsection{Introduction}
-In the scientific paper of P-SEA, the researchers suggest an algorithm based on protein atomic coordinates of the central carbon atom of the residue, the $\alpha$-Carbon.  This algorithm assign the secondary structure to a residue r, based on distances and angles between the $\alpha$-carbon of the residue and the $\alpha$-carbon of its neighbor residues.
+In the scientific paper of PSEA \cite{psea}, the researchers suggest an algorithm based on protein atomic coordinates of the central carbon atom of the residue, the $\alpha$-Carbon. This algorithm assigns the secondary structure to a residue r, based on distances and angles between the $\alpha$-carbon of the residue and the $\alpha$-carbon of its neighbor residues.
 
 \begin{figure}[h!]
     \centering
     \includegraphics[scale=0.6]{res/dev/alphacarbon.png}
-    \caption{$\alpha$-Carbon atoms in a protein}
+    \caption{$\alpha$-Carbon atoms in a protein, from \cite{acarbons}}
     \label{fig:acarbons}
 \end{figure}
 
-$\alpha$-Carbon atoms are the core of residues, in the figure \ref{fig:acarbons} we can see them in a piece of a protein chain.
+$\alpha$-Carbon atoms are the core of residues, in figure \ref{fig:acarbons} we can see them in a piece of a protein chain.
 
 Now back to the P-SEA algorithm: for each residue i, we want to calculate these distance measures:
 \begin{itemize}
@@ -42,7 +43,7 @@ Specific range of values in d2, d3, d4, $\tau$i, $\alpha$i determine in which se
     \item \textbf{Coils}: turns and loops;
 \end{itemize}
 
-The thresholds for belonging in one of the two non coil secondary structure are shown in the table \ref{tab:thr-psea}.
+The thresholds for belonging in one of the two non coil secondary structures are shown in table \ref{tab:thr-psea}.
 
 \begin{table}[h!]
     \centering
@@ -64,21 +65,21 @@ The thresholds for belonging in one of the two non coil secondary structure are 
 
 \begin{figure}[h!]
     \centering
-    \includegraphics{res/dev/coil.png}
-    \caption{The threee secondary structure P-SEA can identify}
+    \includegraphics[scale = 0.22]{res/proteins_overview/secstructure.png}
+    \caption{The three secondary structure P-SEA can identify, from \cite{coil}}
 \end{figure}
 
-Let's see how we implemented the idea of algorithm discussed on the paper\cite{psea}.
+Let's see how we implemented the idea of the algorithm discussed on the paper\cite{psea}.
 
 \pagebreak
 
 \subsection{Implementation of PSEA procedure}
-Let's explore how we implemented the PSEA algorithm in a procedure.
+In this section we will explore how we implemented the PSEA algorithm in a procedure.
 Let's first analyze the various steps required from the algorithm:
 \begin{enumerate}
     \item Get the coordinates of the residue's $\alpha$-carbon atom, for each residue in the protein;
     \item Compute distances and angles for each residue, as described in the paper;
-    \item Assign to each residue it's secondary structure, based on computed distances and angles.
+    \item Assign to each residue its secondary structure, based on computed distances and angles.
 \end{enumerate}
 We will analyze these steps one by one in this section.
 
@@ -122,7 +123,7 @@ This is the basic pseudo-code for this step. Although internally, the code is mo
 \subsubsection{Compute distances and angles between $\alpha$-carbon atoms}
 Now we have a list of $\alpha$-carbon atoms, with their coordinates. The next step described in the paper is computing distances and angles between these atoms, to assign the correct secondary structure.
 
-For each row of the matrix, which represent the residue's $\alpha$-carbon atom, compute the 5 measures:
+For each row of the matrix, which represents the residue's $\alpha$-carbon atom, compute the 5 measures:
 \begin{itemize}
     \item \textbf{d2}: distance between atom at row i and atom at row i+2;
     \item \textbf{d3}: distance between atom at row i and atom at row i+3;
@@ -164,7 +165,7 @@ And finally the dihedral angle, the angle $\alpha$.
     \label{fig:enter-label}
 \end{figure}
 
-Now let's explore how we computed these measures:
+Measures:
 \begin{itemize}
     \item \textbf{Distances}: for the distances we just use the euclidean norm, which is \\ {$||x||_2 = \sqrt{x_1^2 + ... + x_n^2}$}
     \item \textbf{Angle $\tau$}: for this angle we used the following formula \\ $\tau = arccos(\frac{a \cdot b}{||a|| \cdot ||b||})$. With $a = (v_{i+1}-v_i)$ and $b = (v_{i+1}-v_{i+2})$.  
@@ -179,7 +180,7 @@ Now let's explore how we computed these measures:
     \end{enumerate}
 \end{itemize}
 
-Here we can see the pseudo-code to compute distances and angles.
+Here we can see the pseudo-code that computes distances and angles.
 
 \begin{algorithm}[ht]
     \caption{Pseudocode for computing angles and distances between $\alpha$-carbons coordinates}\label{alg:two}
@@ -194,7 +195,7 @@ Here we can see the pseudo-code to compute distances and angles.
     \end{algorithmic}
 \end{algorithm}
 
-As we can see from the pseudo-code we used the python language built-in functions to compute all distances and angles in oneshot, but it's possible to implement it with of for loops.
+As we can see from the pseudo-code we used the python language built-in functions to compute all distances and angles in oneshot, but it's possible to implement it with for loops.
 
 \subsubsection{Assign secondary structure to each residue}
 For this last step, we want to compute which residue belongs to a helix structure and which residue belongs to a strand structure.
@@ -202,23 +203,23 @@ The paper describes the procedure to assign to a residue the secondary structure
 
 For assigning residues to helical structure:
 \begin{itemize}
-    \item Helices are first assigned to any segment long at least five residues, satisfying either one of the following helical criteria:
+    \item Helices are first assigned to any segment at least five residues long, satisfying either one of the following helical criteria:
         \begin{enumerate}
             \item Each residue's $\alpha$-carbon in the segment satisfies both the helical criteria for d3i and for d4i distances;
             \item Each residue's $\alpha$-carbon in the segment satisfies both the helical criteria for $\alpha$i and $\tau$i angles.
         \end{enumerate}
-    \item Then each of this segment is lengthened by one residue at each end and if those 2 residues satisfies some criteria we assign them to helix structure too. The criteria is that the residue satisfies either:
+    \item Then each of this segment is lengthened by one residue at each end and if those 2 residues satisfy some criteria, we assign them to helix structure too. The criteria is that the residue satisfies either:
     \begin{enumerate}
         \item d3i distance helical criteria;
         \item $\tau$i angle helical criteria.
     \end{enumerate}
 \end{itemize} 
-Regarding the assigment of strand structure to residues, the procedure is similar:
+Regarding the assignment of strand structure to residues, the procedure is similar:
 \begin{itemize}
-    \item Strand structure is assigned to any segment long at least three residues, satisfying either one of the following strand criteria:
+    \item Strand structure is assigned to any segment at least three residues long, satisfying either one of the following strand criteria:
     \begin{enumerate}
         \item Each residue's $\alpha$-carbon in the segment satisfies both the d2i, d3i and d4i distances criteria; 
-        \item Each residues's $\alpha$-carbon in the segment satisfies both the $\tau$i and $\alpha$i angles criteria.
+        \item Each residue's $\alpha$-carbon in the segment satisfies both the $\tau$i and $\alpha$i angles criteria.
     \end{enumerate}
     \item Then lengthening by one residue at each end if it satisfies the d3i distance strand criteria;
     \item Finally short $\beta$-strand (<4 residues) are kept only if they have enough contacts, which means they are included in a $\beta$-sheet.
@@ -264,20 +265,20 @@ After this step every residue will have its secondary structure assigned:
 \subsection{Helper procedures} \label{subsect:helper-procedures}
 In this section we will describe more in detail the helper procedures used for the PSEA algorithm:
 \begin{itemize}
-    \item \textbf{get\_res\_start()}: procedure that creates a list of atoms out of the protein structure and then computes the start of each residues, by changes of residue name, id or chain id. It's possible to pass as parameter to the procedure "move\_hhem\_to\_end = True", this puts those atoms between chains to the end of the atom array, resulting in an higher accuracy of prediction of secondary structure in multi-chain proteins.
+    \item \textbf{get\_res\_start()}: procedure that creates a list of atoms out of the protein structure and then computes the start of each residue, by changes of residue name, id or chain id. It's possible to pass as parameter to the procedure "move\_hhem\_to\_end = True", this puts those atoms between chains to the end of the atom array, resulting in a higher accuracy of prediction of secondary structure in multi-chain proteins.
     \item \textbf{distance\_atoms()}: computes the distance between two atoms;
     \item \textbf{angle()}: computes the angle between three atoms;
     \item \textbf{dihedral()}: computes the dihedral angle between four atoms, between their semiplanes;
     \item \textbf{mask\_consecutive()}: this procedure is used to create the first step of helix and strand mask, where we want at least a segment of 3/5 residues satisfying a certain condition. It uses binary masks along with the library NumPy;
-    \item \textbf{extend\_region()}: this procedure is for the second step of finding if a residue belong to that structure, which is lengthening. This procedure lengthen the segment if the residues satisfy the necessary criteria;
-    \item \textbf{mask\_regions\_with\_low\_contacts()}: finally this procedure is used in the strand structure mask, short strands are kept only if they have enough contacts. This procedure "removes" from the strand masks, short strands with low contacts.
+    \item \textbf{extend\_region()}: this procedure is for the second step of finding if a residue belongs to that structure, which is lengthening. This procedure lengthens the segment if the residues satisfy the necessary criteria;
+    \item \textbf{mask\_regions\_with\_low\_contacts()}: finally this procedure is used in the strand structure mask, short strands are kept only if they have enough contacts. This procedure removes short strands with low contacts from the strand masks.
 \end{itemize}
 
 I decided to not show the code snippets for these procedures because they are complex and not too useful to understand the code, but they can be found in the \href{https://github.com/EvilCrive/AlphaFold-disorder/tree/MobiDB-Alphafold}{\underline{github repository}} in the file "utils\_alphafold\_disorder.py".
 
 \subsection{Integration}
-For the integration with the existing AlphaFold-disorder software tool, we encapsulated this psea algorithm in a procedure called get\_sse\_psea() which takes as input the protein structure and return as output an array of characters, with the secondary structure of each residue.
-And the procedure called from the software-tool for each protein file is called "process\_pdb\_psea()". Based on which method we want to use there is a "process\_pdb\_psea()" procedure and a "procedure\_dssp()" one.
+For the integration with the existing AlphaFold-disorder software tool, we encapsulated this PSEA algorithm in a procedure called get\_sse\_psea() which takes as input the protein structure and returns as output an array of characters, with the secondary structure of each residue.
+The procedure called from the software-tool for each protein file is called "process\_pdb\_psea()". Based on which method we want to use there is a "process\_pdb\_psea()" procedure and a "procedure\_dssp()" one.
 
 So the existing code isn't too much touched, since the only difference is that it has to call this procedure instead of the DSSP wrapper procedure.
 
@@ -341,9 +342,7 @@ def compare_sses(sse, dssp) :
 \pagebreak
 
 \section{Computation of RSA with Shrake-Rupley Algorithm}
-Let's go on with the next algorithm we implemented: since we do not use DSSP for the secondary structure, we wanted to not use DSSP at all. The other reason why DSSP is used in AlphaFold-disorder is the RSA, relative solvent accessibility.
-
-So we implemented an alternative way to compute the RSA, without the DSSP. This method is uses the Shrake-Rupley algorithm, to compute SASA, solvent accessible surface areas. This value is then transformed into the relative solvent accessibility with two rounds of normalization factors: first by using Sander's normalization factors, like in DSSP, and then by using an ad-hoc normalization factors we made to not have rsa values bigger than 1, obtained from a sample of two thousands proteins.
+We implemented an alternative way to compute the RSA, without the DSSP. This method is uses the Shrake-Rupley algorithm, to compute SASA, solvent accessible surface areas. This value is then transformed into the relative solvent accessibility with two rounds of normalization factors: first by using Sander's normalization factors, like in DSSP, and then by using an ad-hoc normalization factors we made to not have rsa values bigger than 1, obtained from a sample of two thousands proteins.
 
 We can summarize the steps for implementing this procedure in 2 steps:
 \begin{itemize}
@@ -376,25 +375,25 @@ Now for reference I will show the values of the 2 rounds of normalization factor
 \begin{table}[h!]
     \begin{tabular}{ c|c|c }
         \textbf{3 Letters AA} & \textbf{1 Letter AA} & \textbf{Normalization Factor} \\\hline
-        Ala & A & 106 \\\hline
-        Arg & R & 248 \\\hline
-        Asn & N & 157 \\\hline
-        Asp & D & 163 \\\hline
-        Cys & C & 135 \\\hline
-        Gln & Q & 198 \\\hline
-        Glu & E & 194 \\\hline
-        Gly & G & 84 \\\hline
-        His & H & 184 \\\hline
-        Ile & I & 169 \\\hline
-        Leu & L & 164 \\\hline
-        Lys & K & 205 \\\hline
-        Met & M & 188 \\\hline
-        Phe & F & 197 \\\hline
-        Pro & P & 136  \\\hline
-        Ser & S & 130 \\\hline
-        Thr & T & 142 \\\hline
-        Trp & W & 227 \\\hline
-        Tyr & Y & 222 \\\hline
+        Ala & A & 106 \\
+        Arg & R & 248 \\
+        Asn & N & 157 \\
+        Asp & D & 163 \\
+        Cys & C & 135 \\
+        Gln & Q & 198 \\
+        Glu & E & 194 \\
+        Gly & G & 84 \\
+        His & H & 184 \\
+        Ile & I & 169 \\
+        Leu & L & 164 \\
+        Lys & K & 205 \\
+        Met & M & 188 \\
+        Phe & F & 197 \\
+        Pro & P & 136  \\
+        Ser & S & 130 \\
+        Thr & T & 142 \\
+        Trp & W & 227 \\
+        Tyr & Y & 222 \\
         Val & V & 142 \\
     \end{tabular}
     \caption{Sander and Rost's normalization factors}
@@ -403,25 +402,25 @@ Now for reference I will show the values of the 2 rounds of normalization factor
 \begin{table}[h!]
     \begin{tabular}{ c|c|c }
         \textbf{3 Letters AA} & \textbf{1 Letter AA} & \textbf{Normalization Factor} \\\hline
-        Ala & A & 1.713 \\\hline
-        Arg & R & 1.280 \\\hline
-        Asn & N & 1.476 \\\hline
-        Asp & D & 1.435 \\\hline
-        Cys & C & 1.551 \\\hline
-        Gln & Q & 1.311 \\\hline
-        Glu & E & 1.360 \\\hline
-        Gly & G & 1.804 \\\hline
-        His & H & 1.404 \\\hline
-        Ile & I & 1.413 \\\hline
-        Leu & L & 1.532 \\\hline
-        Lys & K & 1.357 \\\hline
-        Met & M & 1.420 \\\hline
-        Phe & F & 1.434 \\\hline
-        Pro & P & 1.490  \\\hline
-        Ser & S & 1.515 \\\hline
-        Thr & T & 1.507 \\\hline
-        Trp & W & 1.423 \\\hline
-        Tyr & Y & 1.346 \\\hline
+        Ala & A & 1.713 \\
+        Arg & R & 1.280 \\
+        Asn & N & 1.476 \\
+        Asp & D & 1.435 \\
+        Cys & C & 1.551 \\
+        Gln & Q & 1.311 \\
+        Glu & E & 1.360 \\
+        Gly & G & 1.804 \\
+        His & H & 1.404 \\
+        Ile & I & 1.413 \\
+        Leu & L & 1.532 \\
+        Lys & K & 1.357 \\
+        Met & M & 1.420 \\
+        Phe & F & 1.434 \\
+        Pro & P & 1.490  \\
+        Ser & S & 1.515 \\
+        Thr & T & 1.507 \\
+        Trp & W & 1.423 \\
+        Tyr & Y & 1.346 \\
         Val & V & 1.549 \\
     \end{tabular}
     \caption{Ad-hoc normalization factors}

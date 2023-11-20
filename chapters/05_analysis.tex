@@ -181,7 +181,7 @@ For the machine learning models we considered two different ground truths for di
     \item disorder-nox;
     \item binding.
 \end{itemize}
-these three ground truths are from the CAID web application. We described the procedure to obtain and process the CAID ground truths in \ref{analysis-procedures}.
+these three ground truths are from the CAID portal \cite{caid}. We described the procedure to obtain and process the CAID ground truths in \ref{analysis-procedures}.
 
 We developed machine learning models using the three ground truths as target features for the test datasets: so we will have three test datasets, based on the ground truth used and one train dataset, where the target feature will be either binding or disorder, based on the test dataset used.
 
@@ -276,7 +276,7 @@ Support Vector Machines are one of the most simple yet powerful machine learning
 \begin{figure}
     \centering
     \includegraphics[scale=0.6]{res/ML/svm.png}
-    \caption{Picture of SVM hyperplan}
+    \caption{Picture of SVM hyperplane, from \cite{mediumSvm}}
 \end{figure}
 
 Let's see now the code snippet of its implementation on a Python notebook.
@@ -356,7 +356,7 @@ K Nearest Neighbors is a regression model that makes predictions based on the av
 \begin{figure}
     \centering
     \includegraphics[scale=0.6]{res/ML/knn.png}
-    \caption{How KNN algorithm works}
+    \caption{How KNN algorithm works, from \cite{knn}}
 \end{figure}
 
 \begin{lstlisting}[language=Python, caption=K Nearest Neighbors implementation]
@@ -377,7 +377,7 @@ To make predictions, the decision tree is traversed from the root to a leaf node
 \begin{figure}
     \centering
     \includegraphics[scale=0.3]{res/ML/decisiontree.png}
-    \caption{Example of a decision tree}
+    \caption{Example of a decision tree, from \cite{decisionTree}}
 \end{figure}
 
 \begin{lstlisting}[language=Python, caption=Decision Tree implementation]
