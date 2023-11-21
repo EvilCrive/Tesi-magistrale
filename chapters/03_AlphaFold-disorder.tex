@@ -5,15 +5,15 @@
 \section{Introduction}
 
 \subsection{AlphaFold}
-AlphaFold is a deep learning system developed by DeepMind. It's designed to predict protein folding, which is very important to study the protein functions.
+AlphaFold is a deep learning system developed by DeepMind. It's designed to predict protein folding, which is very important to study the protein functions. It uses deep networks to predict the three-dimensional structure of proteins.
 
-It uses deep networks to predict the three-dimensional structure of proteins.
+Here the reference to the scientific paper \cite{Alpha}.
 
 \subsection{pLDDT}
 
 pLDDT (per-residue Local Distance Difference Test) is a metric used by AlphaFold to indicate the confidence of predictions.
 
-A high pLDDT score indicates higher confidence in the predicted 3D position of that residue in the protein structure. AlphaFOld obtains it by computing the distances between the predicted position and the experimentally observed position of the residue.
+A high pLDDT score indicates higher confidence in the predicted 3D position of that residue in the protein structure. AlphaFold obtains it by computing the distances between the predicted position and the experimentally observed position of the residue.
 
 
 \subsection{Disorder}
@@ -59,7 +59,7 @@ The idea is to compare different softwares for this kind of prediction: each of 
 \end{figure}
 
 
-Here we can see a picture representing the CAID cycle: Ground Truth, Standardization, Prediction and Benchmarking. Let's analyze them more in detail :
+Here we can see a picture representing the CAID cycle:
 \begin{itemize}
     \item \textbf{Ground Truth}: DisProt database was selected as reference because it contains a large number of manually curated disorder and binding annotations at a protein level. DisProt annotates association between intrinsically disordered regions and a biological function.
     \item \textbf{Standardization}: Participants submit their softwares, and the CAID organizers encapsulate code into containers, providing standardization across different machines. This also makes it easier to deploy them and to package softwares with dependencies.
@@ -86,8 +86,6 @@ The disorder propensity is calculated with the relative solvent accessibility, R
 
 The optimal classification threshold for AlphaFold-rsa is 0.581, which means RSA < 41.9 \%. Again the threshold was selected by maximizing F1-Score performance on the CAID DisProt dataset.
 
-\pagebreak
-
 \section{AlphaFold-binding}
 Finally we have the last predictor in the software tool AlphaFold-disorder. This infer the binding propensity on disordered residues: disordered residues tend to have higher binding propensity (probability that residue has to bind with other molecules).
 
@@ -104,6 +102,8 @@ The parameter T represents a threshold, obtained again from maximizing the F1-Sc
 
 Below 0.773 the binding propensity is the value from AlphaFold-rsa(T); above 0.773 we use the pLDDT score to compute the binding propensity.
 
+\pagebreak
+
 \section{Analysis of the Code}
 The main points are: 
 \begin{enumerate}
@@ -114,8 +114,6 @@ The main points are:
     \item Computation of predictions;
     \item Creation of output files.
 \end{enumerate}
-
-\pagebreak
 
 \subsection{Parsing Input Parameters}
 To parse input they used the library parse\_args along with Path and PurePath of the library pathlib.
@@ -150,8 +148,6 @@ def parse_args():
     main_parser = argparse.ArgumentParser(parents=[parent_parser])
     return main_parser.parse_args()
 \end{lstlisting}
-
-\pagebreak
 
 \subsection{Parsing Input Files}
 First of all the library pathlib is employed to obtain the path of the input file(s) and then we have 4 possibilities, identified through if-else 's :
@@ -277,7 +273,8 @@ Both in window\_rsa and in thresholds\_rsa we can have multiple values, for an e
 
 By default this procedure adds to the dataframe 2 columns, one for AlphaFold-RSA disorder prediction and one for AlphaFold-Binding binding prediction. With more than elements in the parameter lists of window\_rsa and thresholds\_rsa we will have more columns.
 
-Let's now analyze the code of the procedure.
+Down below a code snippet of the procedure.
+
 \begin{lstlisting}[language=Python, caption=Procedure make\_prediction(), numbers=left, label={code:makepred}]
 def make_prediction(df, window_rsa=[25], thresholds_rsa=[0.581]):
     for w in window_rsa:
@@ -304,8 +301,6 @@ While on lines 11 and 12 we have some complex computation that uses the threshol
 Finally the data obtained from DSSP and the predictions computed are saved in 2 .tsv files. Actually the first .tsv file is done before the procedure make\_prediction, since it doesn't include the predictions' columns. For simplicity of explanation I preferred to talk about it in the same part as for the 2nd output file.
 
 This creation of output files is incorporated in the main procedure, using the function "to\_csv" provided by the Pandas library. 
-
-Let's explore the code.
 
 \begin{lstlisting}[language=Python, caption=Creation of output files]
 if __name__ == '__main__':

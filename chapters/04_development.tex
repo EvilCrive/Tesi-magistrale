@@ -69,19 +69,17 @@ The thresholds for belonging in one of the two non coil secondary structures are
     \caption{The three secondary structure P-SEA can identify, from \cite{coil}}
 \end{figure}
 
-Let's see how we implemented the idea of the algorithm discussed on the paper\cite{psea}.
+In the next section I will show the implementation of the PSEA algorithm discussed on the paper\cite{psea}.
 
 \pagebreak
 
 \subsection{Implementation of PSEA procedure}
-In this section we will explore how we implemented the PSEA algorithm in a procedure.
-Let's first analyze the various steps required from the algorithm:
+We can summarize the PSEA algorithm in these steps:
 \begin{enumerate}
     \item Get the coordinates of the residue's $\alpha$-carbon atom, for each residue in the protein;
     \item Compute distances and angles for each residue, as described in the paper;
     \item Assign to each residue its secondary structure, based on computed distances and angles.
 \end{enumerate}
-We will analyze these steps one by one in this section.
 
 \subsubsection{Get $\alpha$-carbon atom's coordinates for each residue}
 In this first step we want to obtain the list of residues in the protein and then for each residue we want the coordinates of its $\alpha$-carbon.
@@ -132,38 +130,31 @@ For each row of the matrix, which represents the residue's $\alpha$-carbon atom,
     \item angle $\alpha$: angle between four consecutive atoms: at rows i, i+1, i+2 and i+3.
 \end{itemize}
 
-I will show with a few pictures what distances and those 2 angles looks like, in the case of 5 consecutive $\alpha$-carbons. 
-
-For simplicity the $\alpha$-carbon are directly linked, but in reality they have a lot of atoms between them, atoms that aren't $\alpha$-carbon.
-
-Let's start from the angle $\tau$.
-
-\begin{figure}[h!]
-    \centering
-    \includegraphics[scale=0.5]{res/dev/angleTau.png}
-    \caption{Angle $\tau$}
-\end{figure}
+I will show with a few pictures what distances and those 2 angles looks like, in the case of 5 consecutive $\alpha$-carbons ($\alpha$-carbon are directly linked for simplicity).
 
 \pagebreak
 
-And then we have the 3 distances: d2, d3 and d4.
+\begin{figure}[h!]
+    \centering
+    \includegraphics[scale=0.4]{res/dev/angleTau.png}
+    \caption{Angle $\tau$}
+\end{figure}
 
 \begin{figure}[h!]
     \centering
-    \includegraphics[scale=0.35]{res/dev/distances.png}
+    \includegraphics[scale=0.45]{res/dev/angleAlpha.png}
+    \caption{Dihedral Angle $\alpha$}
+    \label{fig:enter-label}
+\end{figure}
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[scale=0.25]{res/dev/distances.png}
     \caption{Distances d2, d3 and d4}
     \label{fig:enter-label}
 \end{figure}
 
 \pagebreak
-And finally the dihedral angle, the angle $\alpha$.
-
-\begin{figure}[h!]
-    \centering
-    \includegraphics[scale=0.45]{res/dev/angleAlpha.png}
-    \caption{Angle $\alpha$}
-    \label{fig:enter-label}
-\end{figure}
 
 Measures:
 \begin{itemize}
@@ -474,9 +465,7 @@ Regarding the implementation, we have:
 \end{itemize}
 Since in our case we are interested just in reading files .fcz we just need the procedure "decompress" from the library, which decompress the .fcz file into a .pdb file.
 
-We also used the library \textbf{StringIO} as a workaround to avoid saving the protein file after decompressing the .fcz file.
-
-Let's see the integration of this library into the software-tool AlphaFold-disorder.
+We used the library \textbf{StringIO} as a workaround to avoid saving the protein file after decompressing the .fcz file.
 
 \begin{lstlisting}[language=Python, caption=Integration of FoldComp]
 def is_fcz_file(filepath) :

@@ -1,6 +1,6 @@
-\chapter{Analysis of results' quality of AlphaFold-disorder (SASA)}
+\chapter{AlphaFold-disorder (SASA) assessment}
 \label{chp:analysis}
-AlphaFold/disorder (SASA) is the variation we developed of the software-tool AlphaFold-disorder, using PSEA and SASA instead of DSSP to compute the predictions, in particular we have the SASA variation for each of the three algorithms within the software-tool:
+AlphaFold-disorder (SASA) is the variation we developed of the software-tool AlphaFold-disorder, using PSEA and SASA instead of DSSP to compute the predictions, in particular we have the SASA variation for each of the three algorithms within the software-tool:
 \begin{itemize}
     \item AlphaFold-pLDDT (SASA);
     \item AlphaFold-rsa (SASA);
@@ -61,9 +61,9 @@ We made density plots, histograms and scatterplots, using the Python library \hr
     \label{fig:histRsa}
 \end{figure}
 
-In figure \ref{fig:hist} we have plotted the distribution of the features considered in this analysis, for residues with disorder ground truth equal to one.
+In figure \ref{fig:hist} shows the distribution of the features considered in this analysis, for residues with disorder, according to the ground truth.
 
-In figure \ref{fig:histRsa} we have another histogram, for the RSA feature both for disorder ground truth equal to zero (negative class) and for disorder ground truth equal to one (positive class).
+In figure \ref{fig:histRsa} we have another histogram to show distribution of features, this time on both classes of disorder (present - 1 vs absent - 0).
 
 Another kind of plot we made are scatterplots: we made them between all pairs of the four considered features, to visualize any possible trend, in particular trends related with frequency.
 
@@ -92,13 +92,9 @@ For the machine learning models we considered two different ground truths for di
     \item disorder-nox;
     \item binding.
 \end{itemize}
-these three ground truths are from the CAID portal \cite{caid}. We described the procedure to obtain and process the CAID ground truths in \ref{analysis-procedures}.
+These three ground truths are from the CAID portal \cite{caid}. We described the procedure to obtain and process the CAID ground truths in \ref{analysis-procedures}.
 
 We developed machine learning models using the three ground truths as target features for the test datasets: so we will have three test datasets, based on the ground truth used and one train dataset, where the target feature will be either binding or disorder, based on the test dataset used.
-
-Let's analyse the preprocessing steps we made.
-
-\vspace{5em}
 
 \subsection{Preprocessing}
 As test datasets we used the dataframes containing the proteins present in each of the ground truths, with target the ground truths.
@@ -108,8 +104,6 @@ While as train dataset we used the dataframe of all the proteins in the DisProt 
 We computed a one-hot encoding of the ss column: \textbf{ss\_onehot}, so we have a number instead of characters "H", "E", "C". We did this both for test datasets and for train datasets. 
 
 We also added new features to improve the accuracy of ML models: we incorporated the Atchley scale in the datasets. This Atchley scale consists in five features that are defined for each residue.
-
-\pagebreak
 
 \begin{table}[h!]
     \centering
@@ -190,7 +184,7 @@ Support Vector Machines are one of the most simple yet powerful machine learning
     \caption{Picture of SVM hyperplane, from \cite{mediumSvm}}
 \end{figure}
 
-Let's see now the code snippet of its implementation on a Python notebook.
+Down below a code snippet of its implementation on a Python notebook.
 
 \begin{lstlisting}[language=Python, caption=SVM implementation]
 from sklearn.linear_model import *
@@ -221,8 +215,6 @@ Here we used the \textbf{RidgeCV} class instead of simply \textbf{Ridge}, becaus
 LASSO, Least Absolute Shrinkage and Selection Operator, is a linear regression model which uses L1 regularization. L1 regularization has the effect of setting some of the coefficients to exactly zero. This has the interesting property of performing feature selection, meaning that LASSO can be used to automatically select a subset of the most relevant features.
 
 This is the ML model with better performances with our datasets, probably this automatic feature selection is very effective in our case.
-
-Let's move on to the implementation.
 
 \begin{lstlisting}[language=Python, caption=LASSO implementation]
 from sklearn.linear_model import *
@@ -369,7 +361,7 @@ Here we used disorder NOX as the ground truth. Here AlphaFold-rsa (SASA) is quit
 
 \subsection{Binding}
 
-In this last couple of plots, we consider binding as the ground truth. In both curves, for the major part, AlphaFld-binding (SASA) has better predictions than AlphaFold-binding and of the ML model. 
+In the following figures, we consider binding as the ground truth. In both curves, for the major part, AlphaFold-binding (SASA) has better predictions than AlphaFold-binding and of the ML model. 
 \begin{figure}[h!]
     \centering
     \includegraphics[scale = 0.75]{res/ML/roc-binding.png}
@@ -388,9 +380,9 @@ In this last couple of plots, we consider binding as the ground truth. In both c
 \subsection{Fetch proteins and functional annotations from DisProt database}
 First of all we downloaded the file .json from the DisProt website, in the \href{https://disprot.org/download}{\underline{download page}}. Then we used the library \textbf{json} of Python to extract from the json file, inside the json file we find all the information we want about DisProt proteins. 
 
-Let's quickly analyse the structure of this json: from the root of the json we have two keys, \textbf{data} and \textbf{size}. Size contains just the number of proteins in this json, and data contains an array of DisProt IDs. Each DisProt IDs have several key-value pairs, we are interested in \textbf{acc}, \textbf{disprot\_id} and \textbf{regions}.
+Here follows an overview of the structure of the JSON file: from the root of the json we have two keys, \textbf{data} and \textbf{size}. Size contains just the number of proteins in this json, and data contains an array of DisProt IDs. Each DisProt IDs have several key-value pairs, we are interested in \textbf{acc}, \textbf{disprot\_id} and \textbf{regions}.
 
-We are interested in the key \textbf{'acc'} of every DisProt protein because it is the UniProt ID: with these UniProt IDs we can fetch very quickly all the proteins structure of proteins in DisProt with the AlphaFold database API.
+We are interested in the key \textbf{'acc'} of every DisProt protein because it is the UniProt ID: with these UniProt IDs we can fetch the proteins structure of all the proteins in DisProt with the AlphaFold database API.
 \begin{lstlisting}[language=Python, caption=Script to use AlphaFold database API]
 import requests
 [...]

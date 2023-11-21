@@ -1,11 +1,16 @@
 %!TEX root = ../main.tex
 \begin{abstract}
-In this thesis we describe the work that I, Alberto Crivellari, along with the professors Damiano Piovesan and Alexander Monzon, carried out during my internship period. 
+Structural Bioinformatics is a branch of science which involves the analysis 
+of three-dimensional structures of molecules. One of the main molecules considered are proteins,
+ at the beginning the focus was on proteins with a fixed three-dimensional structure.
+But recently, the researchers are shifting the focus to IDPs, Intrinsically Disordered Proteins,
+ which are proteins that have disordered regions: parts of the protein doesn't belong to any fixed conformation, but instead they have highly flexible conformations.
+The work we did on this thesis is focused on recognizing IDPs, through the extraction of features which are indicators of disorder. 
 
-We developed a variation of the software tool AlphaFold-disorder: AlphaFold-disorder (SASA), by implementing PSEA and SASA algorithms. Then we compared the quality of results of the new software tool with the original one.
+A variation of the software tool AlphaFold-disorder, named AlphaFold-disorder (SASA), was developed by implementing PSEA and SASA algorithms. Subsequently, the quality of results produced by the new software tool was compared with the original one.
 
-Regarding the development we made three major procedures: the PSEA prcoedure to predict secondary structures, based on three-dimensional coordinates of amino acids; the SASA procedure to compute RSA of amino acids, using the SASA library; the FoldComp procedure for managing .fcz files, which are compressed protein files.
+The development process involved three major procedures: the implementation of the PSEA procedure for predicting secondary structures based on three-dimensional coordinates of amino acids; the implementation of the SASA procedure for computing RSA (Relative Solvent Accessibility) of amino acids using the SASA library; and the implementation of the FoldComp procedure for managing .fcz files, which are compressed protein files.
 
-To assess the quality of the results we first plotted the dataset to gain insights on the features' distribution and then we implemented ML models. Finally we compared ROC and Precision-Recall curves between AlphaFold-disorder, AlphaFold-disorder (SASA) and the best ML model to obtain some insight on the results: AlphaFold-disorder (SASA) prediction are on par to AlphaFold-disorder ones, while the ML model needs more training data to surpass their predictions.
+To assess the quality of the results, the dataset was initially plotted to gain insights into the distribution of features. Machine learning models were then implemented. Finally, ROC and Precision-Recall curves between AlphaFold-disorder, AlphaFold-disorder (SASA), and the best machine learning model were compared. The comparison revealed that AlphaFold-disorder (SASA) predictions are on par with AlphaFold-disorder ones, while the machine learning model requires more training data to surpass their predictions.
 
 \end{abstract}
